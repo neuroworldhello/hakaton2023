@@ -1,0 +1,26 @@
+POST http://localhost:8080/practices
+content-type: application/json
+
+{
+  "name": "Первая практика",
+  "description": "Описание первой практики",
+  "documentLink": "https://lala",
+  "rating": 0,
+  "team": {
+    "id": 2,
+    "name": "Hello нейроWorld"
+  },
+  "category": {
+    "id": 2,
+    "name": "Разработка"
+  },
+  "author": {
+    "name": "Кодер"
+  }
+}
+
+###
+POST http://localhost:8080/practices/search
+
+###
+GET http://localhost:8080/practices/3
