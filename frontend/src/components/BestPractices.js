@@ -69,7 +69,7 @@ function BestPractices() {
   }
 
   const handleExit = () => {
-      return axios.get('/logout');
+      return axios.get(document.location+'/logout');
   }
 
   const handleLike = () => {
