@@ -2,7 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.domain.Practice;
 import com.example.backend.dto.PracticeDto;
-import com.example.backend.dto.PracticeSearchCriteriaDTO;
+import com.example.backend.dto.PracticeSearchCriteria;
 
 import java.util.List;
 
@@ -13,5 +13,7 @@ public interface PracticeService {
 
     Practice getPracticeById(Long id);
 
-    List<Practice> searchPractices(PracticeSearchCriteriaDTO searchCriteria);
+    List<Practice> searchPractices(PracticeSearchCriteria searchCriteria);
+
+    Practice ratePractice(Long id);
 }

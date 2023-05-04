@@ -18,7 +18,7 @@ import {
 import { Add } from '@mui/icons-material';
 import {useState} from "react";
 import {CustomDialog} from "./CustomDialog";
-import {AddPracticeDialog} from "./AddPracticeDialog";
+import {AddPracticeDialogContent} from "./AddPracticeDialogContent";
 import ButtonComponent from "./Button";
 
 const TestData = [
@@ -73,8 +73,13 @@ function BestPractices() {
     setCardDialogOpen(false);
   }
 
+  const handleSaveButtonClick = () => {
+    setCardDialogOpen(false);
+    console.log('click-click')
+  }
+
   function dialogContent () {
-    return <AddPracticeDialog />
+    return <AddPracticeDialogContent />
   }
 
   return (
@@ -173,6 +178,9 @@ function BestPractices() {
         open={cardDialogOpen}
         onClose={handleCardDialogClose}
         content={dialogContent()}
+        title='Добавление практики'
+        successButtonTitle="Сохранить"
+        successButtonAction={handleSaveButtonClick}
       />
     </div>
   );

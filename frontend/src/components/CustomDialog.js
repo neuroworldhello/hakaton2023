@@ -1,12 +1,13 @@
 import React from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 
-export function CustomDialog({open, onClose, successAction, successTitle, content, title}) {
+export function CustomDialog({open, onClose, successButtonAction, successButtonTitle, content, title}) {
     return (
         <Dialog
             open={open}
             onClose={onClose}
-            maxWidth="md"
+            maxWidth="sm"
+            fullWidth={true}
         >
             <DialogTitle>
                 {title}
@@ -17,8 +18,7 @@ export function CustomDialog({open, onClose, successAction, successTitle, conten
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                {successAction && <Button onClick={successAction}>{successTitle}</Button>}
-                <Button onClick={onClose}>Закрыть</Button>
+                {successButtonAction && <Button onClick={successButtonAction}>{successButtonTitle}</Button>}
             </DialogActions>
         </Dialog>
     )
