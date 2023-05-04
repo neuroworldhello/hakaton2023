@@ -12,7 +12,7 @@ export function PracticeDialog({dialogOpen, setDialogOpen}) {
 
     const handleSaveButtonClick = () => {
         setDialogOpen(false);
-        axios.post("http://localhost:8080/api/practice", practice)
+        axios.post("http://localhost:8080/api/practices", practice)
             .then(response => console.log(response.data))
             .catch(error => console.log(error))
         console.log(practice)
