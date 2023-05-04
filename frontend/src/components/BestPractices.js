@@ -76,6 +76,10 @@ function BestPractices() {
 
   }
 
+  const handleSearch = () => {
+
+  }
+
   useEffect(() => {
     // axios.get(``)
     //   .then((response) => setPractices(response.data));
@@ -116,7 +120,7 @@ function BestPractices() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </Grid>
-        <Grid item xs={12} sm={4} className="px-8">
+        <Grid item xs={12} sm={3} className="px-8">
           <FormControl className="w-full">
             <InputLabel id="category">Категория</InputLabel>
             <Select
@@ -136,7 +140,7 @@ function BestPractices() {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12} sm={4} className="px-8">
+        <Grid item xs={12} sm={3} className="px-8">
           <FormControl className="w-full">
             <InputLabel id="team">Команда</InputLabel>
             <Select
@@ -155,6 +159,15 @@ function BestPractices() {
               ))}
             </Select>
           </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={2} className="px-8">
+          <ButtonComponent
+            variant="contained"
+            className="w-full h-full"
+            onClick={handleSearch}
+          >
+            Поиск
+          </ButtonComponent>
         </Grid>
       </Grid>
 
