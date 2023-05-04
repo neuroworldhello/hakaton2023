@@ -19,6 +19,7 @@ import { Add } from '@mui/icons-material';
 import {useState} from "react";
 import {CustomDialog} from "./CustomDialog";
 import {AddPracticeDialog} from "./AddPracticeDialog";
+import ButtonComponent from "./Button";
 
 const TestData = [
   {
@@ -77,27 +78,24 @@ function BestPractices() {
   }
 
   return (
-    <div>
-      <AppBar position="static">
+    <div className="bg-background-page text-body-font">
+      <AppBar position="static" className="bg-page-header">
         <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            {/* Логотип */}
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" className="text-heading-font" component="div" sx={{ flexGrow: 1 }}>
             Наилучшие практики
           </Typography>
-          <Button color="inherit">Войти</Button>
+          <ButtonComponent color="inherit">Войти</ButtonComponent>
         </Toolbar>
       </AppBar>
-      <img src={require('../logo.jpg')}  />
+      <img src={require('../logo.jpg')} alt="logo" />
       {/* Кнопка добавления новой практики */}
-      <Button
+      <ButtonComponent
         variant="contained" sx={{ mt: 2 }}
         startIcon={<Add />}
         onClick={handleCardDialogOpen}
       >
         Добавить новую практику
-      </Button>
+      </ButtonComponent>
 
       <Grid container sx={{ marginTop: 2 }}>
         <Grid item xs={12} sm={4} sx={{ pr: 2 }}>
@@ -143,8 +141,8 @@ function BestPractices() {
       </Grid>
 
           {/* Таблица */}
-          <Table>
-            <TableHead>
+          <Table className="bg-background-table mt-16">
+            <TableHead className="bg-table-header">
               <TableRow>
                 <TableCell>Наилучшие практики</TableCell>
                 <TableCell>Категория</TableCell>
