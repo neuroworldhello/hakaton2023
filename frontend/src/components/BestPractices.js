@@ -49,17 +49,24 @@ const TestData = [
 ];
 
 const categoryOptions = [
-  'Все',
-  'Frontend',
-  'Backend',
+  'Аналитика',
+  'Разработка',
+  'Тестирование',
   'DevOps',
-  'Mobile',
-  'Data Science',
+  'Документирование'
+];
+
+const teamOptions = [
+  'ГосНейроз',
+  'Hello нейроWorld',
+  'Якоманда',
+  'NейраNетки',
+  'НейроШтурм'
 ];
 
 function BestPractices() {
-  const [category, setCategory] = React.useState('');
-  const [team, setTeam] = React.useState('');
+  const [category, setCategory] = React.useState('all');
+  const [team, setTeam] = React.useState('all');
   const [search, setSearch] = React.useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [practices, setPractices] = React.useState([]);
@@ -69,22 +76,27 @@ function BestPractices() {
   }
 
   const handleExit = () => {
-      return axios.get(document.location+'/logout');
+      return axios.get(document.location + '/logout');
   }
 
-  const handleLike = () => {
-
+  const handleLike = (id) => {
+    axios.post(`http://localhost:8080/api/practices/${id}/rate`, id);
   }
 
   const handleSearch = () => {
-
+    const condition = {
+      name: search,
+      team: team === 'all' ? null : team,
+      category: category === 'all' ? null : team
+    };
+    axios.post('http://localhost:8080/api/practices/search', condition);
   }
 
   useEffect(() => {
     // axios.get(``)
     //   .then((response) => setPractices(response.data));
     setPractices(TestData);
-  },[search, team, category]);
+  },[]);
 
   return (
     <div className="bg-background-page text-body-font">
@@ -132,6 +144,7 @@ function BestPractices() {
               label="Категория"
               margin="normal"
             >
+              <MenuItem key="all" value='all'>Все</MenuItem>
               {categoryOptions.map((option) => (
                 <MenuItem key={option} value={option}>
                   {option}
@@ -152,7 +165,8 @@ function BestPractices() {
               label="Команда"
               margin="normal"
             >
-              {categoryOptions.map((option) => (
+              <MenuItem key="all" value='all'>Все</MenuItem>
+              {teamOptions.map((option) => (
                 <MenuItem key={option} value={option}>
                   {option}
                 </MenuItem>
@@ -196,7 +210,10 @@ function BestPractices() {
                   <TableCell>{item.votes}</TableCell>
                   <TableCell>{item.author}</TableCell>
                   <TableCell>
-                    <IconButton aria-label="upload picture" className="text-button" disabled={false} onClick={handleLike}>
+                    <IconButton aria-label="upload picture"
+                                className="text-button"
+                                disabled={false}
+                                onClick={() => handleLike(item.id)}>
                       <ThumbUpIcon />
                     </IconButton>
                   </TableCell>
