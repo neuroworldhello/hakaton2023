@@ -12,9 +12,10 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Button, FormControl, InputLabel,
+  FormControl, InputLabel, IconButton,
 } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import {useState} from "react";
 import {CustomDialog} from "./CustomDialog";
 import {AddPracticeDialogContent} from "./AddPracticeDialogContent";
@@ -81,6 +82,14 @@ function BestPractices() {
     return <AddPracticeDialogContent />
   }
 
+  const handleExit = () => {
+
+  }
+
+  const handleLike = () => {
+
+  }
+
   return (
     <div className="bg-background-page text-body-font">
       <AppBar position="static" className="bg-page-header">
@@ -88,7 +97,7 @@ function BestPractices() {
           <Typography variant="h6" className="text-heading-font" component="div" sx={{ flexGrow: 1 }}>
             Наилучшие практики
           </Typography>
-          <ButtonComponent >Выйти</ButtonComponent>
+          <ButtonComponent onClick={handleExit}>Выйти</ButtonComponent>
         </Toolbar>
       </AppBar>
       <div>
@@ -178,9 +187,9 @@ function BestPractices() {
                   <TableCell>{item.votes}</TableCell>
                   <TableCell>{item.author}</TableCell>
                   <TableCell>
-                    <Button variant="outlined" color="primary">
-                      Голосовать
-                    </Button>
+                    <IconButton aria-label="upload picture" className="text-button" disabled={false} onClick={handleLike}>
+                      <ThumbUpIcon />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}
