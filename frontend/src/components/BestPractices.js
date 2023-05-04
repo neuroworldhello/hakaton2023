@@ -84,10 +84,10 @@ function BestPractices() {
   },[]);
 
   return (
-    <div className="bg-background-page text-body-font">
+    <div className="bg-background-page ">
       <AppBar position="static" className="bg-page-header">
         <Toolbar>
-          <Typography variant="h6" className="text-heading-font" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" className="text-white" component="div" sx={{ flexGrow: 1 }}>
             Наилучшие практики
           </Typography>
           <ButtonComponent onClick={handleExit}>Выйти</ButtonComponent>
@@ -172,14 +172,14 @@ function BestPractices() {
 
           {/* Таблица */}
           <Table className="bg-background-table mt-16">
-            <TableHead className="bg-table-header">
-              <TableRow>
-                <TableCell>Наилучшие практики</TableCell>
-                <TableCell>Категория</TableCell>
-                <TableCell>Команда</TableCell>
-                <TableCell>Количество голосов</TableCell>
-                <TableCell>Автор</TableCell>
-                <TableCell>Голосовать</TableCell>
+            <TableHead className="bg-table-header text-white">
+              <TableRow >
+                <TableCell className="text-white">Наилучшие практики</TableCell>
+                <TableCell className="text-white">Категория</TableCell>
+                <TableCell className="text-white">Команда</TableCell>
+                <TableCell className="text-white">Количество голосов</TableCell>
+                <TableCell className="text-white">Автор</TableCell>
+                <TableCell className="text-white">Голосовать</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

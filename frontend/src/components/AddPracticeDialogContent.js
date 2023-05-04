@@ -1,5 +1,5 @@
 import React from "react";
-import {InputLabel, MenuItem, Select, TextField} from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import {categories, teams} from "./consts";
 
 export function AddPracticeDialogContent({practice, setPractice}) {
@@ -36,7 +36,7 @@ export function AddPracticeDialogContent({practice, setPractice}) {
 
     return (
         <div className='mt-4 w-full'>
-            <div className='m-2 w-full'>
+            <div className='m-2'>
                 <TextField
                     required
                     value={practice.name || ''}
@@ -45,33 +45,37 @@ export function AddPracticeDialogContent({practice, setPractice}) {
                     label="Наименование практики"
                     variant="outlined" />
             </div>
-            <div className='m-2 w-full'>
-                <InputLabel id="category-label">Категория</InputLabel>
-                <Select
-                    value={practice.category || ''}
-                    labelId="category-label"
-                    label="Категория"
-                    fullWidth
-                    margin="normal"
-                    onChange={handleCategoryChange}
-                >
-                    {categoryOptions}
-                </Select>
+            <div className='m-2'>
+                <FormControl className="w-full">
+                    <InputLabel id="category-label">Категория</InputLabel>
+                    <Select
+                        value={practice.category || ''}
+                        labelId="category-label"
+                        label="Категория"
+                        fullWidth
+                        margin="normal"
+                        onChange={handleCategoryChange}
+                    >
+                        {categoryOptions}
+                    </Select>
+                </FormControl>
             </div>
-            <div className='m-2 w-full'>
-                <InputLabel id="team-label">Команда</InputLabel>
-                <Select
-                    value={practice.team || ''}
-                    labelId="team-label"
-                    label="Команда"
-                    fullWidth
-                    margin="normal"
-                    onChange={handleTeamChange}
-                >
-                    {teamOptions}
-                </Select>
+            <div className='m-2'>
+                <FormControl className="w-full">
+                    <InputLabel id="team-label">Команда</InputLabel>
+                    <Select
+                        value={practice.team || ''}
+                        labelId="team-label"
+                        label="Команда"
+                        fullWidth
+                        margin="normal"
+                        onChange={handleTeamChange}
+                    >
+                        {teamOptions}
+                    </Select>
+                </FormControl>
             </div>
-            <div className='m-2 w-full'>
+            <div className='m-2'>
                 <TextField
                     required
                     value={practice.documentLink || ''}
