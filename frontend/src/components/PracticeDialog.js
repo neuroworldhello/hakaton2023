@@ -1,8 +1,7 @@
 import React, {useState} from "react";
-import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import {AddPracticeDialogContent} from "./AddPracticeDialogContent";
 import axios from "axios";
-import ButtonComponent from "./Button";
 
 export function PracticeDialog({dialogOpen, setDialogOpen}) {
     const [practice, setPractice] = useState({});
@@ -13,9 +12,20 @@ export function PracticeDialog({dialogOpen, setDialogOpen}) {
 
     const handleSaveButtonClick = () => {
         setDialogOpen(false);
-        axios.post("http://localhost:8080/api/practices", practice)
+
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(practice)
+        };
+
+        fetch("/api/practices", requestOptions)
             .then(response => console.log(response.data))
             .catch(error => console.log(error))
+        //
+        // axios.post("/api/practice", practice)
+        //     .then(response => console.log(response.data))
+        //     .catch(error => console.log(error))
         console.log(practice)
     }
 
@@ -33,7 +43,7 @@ export function PracticeDialog({dialogOpen, setDialogOpen}) {
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <ButtonComponent onClick={handleSaveButtonClick}>Добавить</ButtonComponent>
+                <Button onClick={handleSaveButtonClick}>Добавить</Button>
             </DialogActions>
         </Dialog>
     )
