@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.domain.Practice;
+import com.example.backend.dto.PracticeDto;
 import com.example.backend.service.PracticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +16,8 @@ public class PracticeController {
     private final PracticeService practiceService;
 
     @PostMapping
-    public Practice createPractice(@RequestBody Practice practice) {
-        return practiceService.savePractice(practice);
+    public PracticeDto createPractice(@RequestBody PracticeDto practiceDto) {
+        return practiceService.savePractice(practiceDto);
     }
 
     @GetMapping("/{id}")
