@@ -41,13 +41,18 @@ export function PracticeDialog({dialogOpen, setDialogOpen}) {
             fullWidth={true}
         >
             <DialogTitle>Добавление практики</DialogTitle>
-            <DialogContent>
+            <DialogContent className='pb-0'>
                 <DialogContentText>
                     <AddPracticeDialogContent practice={practice} setPractice={setPractice}/>
                 </DialogContentText>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={handleSaveButtonClick}>Добавить</Button>
+            <DialogActions className='pr-20'>
+                <Button
+                    onClick={handleSaveButtonClick}
+                    disabled={!practice.name || !practice.team || !practice.category || !practice.documentLink}
+                >
+                    Добавить
+                </Button>
             </DialogActions>
         </Dialog>
     )
