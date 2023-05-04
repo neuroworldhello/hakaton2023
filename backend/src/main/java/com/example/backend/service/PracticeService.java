@@ -7,7 +7,7 @@ import com.example.backend.dto.PracticeSearchCriteria;
 import java.util.List;
 
 public interface PracticeService {
-    PracticeDto savePractice(PracticeDto practiceDto);
+    PracticeDto savePractice(PracticeDto practiceDto, String author);
 
     List<Practice> search();
 

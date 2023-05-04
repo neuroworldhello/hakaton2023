@@ -5,6 +5,7 @@ import com.example.backend.dto.PracticeDto;
 import com.example.backend.dto.PracticeSearchCriteria;
 import com.example.backend.service.PracticeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +18,8 @@ public class PracticeController {
     private final PracticeService practiceService;
 
     @PostMapping
-    public PracticeDto createPractice(@RequestBody PracticeDto practiceDto) {
-        return practiceService.savePractice(practiceDto);
+    public PracticeDto createPractice(@RequestBody PracticeDto practiceDto, Authentication authentication) {
+        return practiceService.savePractice(practiceDto, authentication.getName());
     }
 
     @GetMapping("/{id}")

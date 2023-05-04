@@ -24,8 +24,8 @@ public class PracticeServiceImpl implements PracticeService {
     private final PracticeRepository practiceRepository;
     private final PracticeConverterService practiceConverterService;
 
-    public PracticeDto savePractice(PracticeDto practiceDto) {
-
+    public PracticeDto savePractice(PracticeDto practiceDto, String author) {
+        practiceDto.setAuthor(author);
         Practice practice = practiceRepository.save(practiceConverterService.toEntity(practiceDto));
         return practiceConverterService.toDto(practice);
     }
