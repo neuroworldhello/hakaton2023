@@ -16,8 +16,25 @@ import {
   Button,
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
+import {useState} from "react";
+import {CustomDialog} from "./CustomDialog";
+import {AddPracticeDialog} from "./AddPracticeDialog";
 
 function BestPractices() {
+  const [cardDialogOpen, setCardDialogOpen] = useState(false);
+
+  const handleCardDialogOpen = () => {
+    setCardDialogOpen(true);
+  }
+
+  const handleCardDialogClose = () => {
+    setCardDialogOpen(false);
+  }
+
+  function dialogContent () {
+    return <AddPracticeDialog />
+  }
+
   return (
     <div>
       <AppBar position="static">
@@ -63,11 +80,20 @@ function BestPractices() {
             </TableBody>
           </Table>
           {/* Кнопка добавления новой практики */}
-          <Button variant="contained" sx={{ mt: 2 }} startIcon={<Add />}>
+          <Button
+              variant="contained" sx={{ mt: 2 }}
+              startIcon={<Add />}
+              onClick={handleCardDialogOpen}
+          >
             Добавить новую практику
           </Button>
         </Grid>
       </Grid>
+      <CustomDialog
+          open={cardDialogOpen}
+          onClose={handleCardDialogClose}
+          content={dialogContent()}
+      />
     </div>
   );
 }
