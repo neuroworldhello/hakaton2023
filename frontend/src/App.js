@@ -1,10 +1,16 @@
 import './App.css';
 import './dist/output.css';
 import BestPractices from "./components/BestPractices";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
-    <BestPractices/>
+      <div>
+        <BestPractices/>
+        <ToastContainer />
+      </div>
+
   );
 }
 
