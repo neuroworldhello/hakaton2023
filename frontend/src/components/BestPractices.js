@@ -20,6 +20,7 @@ import Add from '@mui/icons-material/Add';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ButtonComponent from "./Button";
 import axios from "axios";
+import { categories, teams } from "./consts";
 
 const TestData = [
   {
@@ -46,22 +47,6 @@ const TestData = [
     votes: 5,
     author: 'Автор 3',
   },
-];
-
-const categoryOptions = [
-  'Аналитика',
-  'Разработка',
-  'Тестирование',
-  'DevOps',
-  'Документирование'
-];
-
-const teamOptions = [
-  'ГосНейроз',
-  'Hello нейроWorld',
-  'Якоманда',
-  'NейраNетки',
-  'НейроШтурм'
 ];
 
 function BestPractices() {
@@ -145,7 +130,7 @@ function BestPractices() {
               margin="normal"
             >
               <MenuItem key="all" value='all'>Все</MenuItem>
-              {categoryOptions.map((option) => (
+              {categories.map((option) => (
                 <MenuItem key={option} value={option}>
                   {option}
                 </MenuItem>
@@ -166,7 +151,7 @@ function BestPractices() {
               margin="normal"
             >
               <MenuItem key="all" value='all'>Все</MenuItem>
-              {teamOptions.map((option) => (
+              {teams.map((option) => (
                 <MenuItem key={option} value={option}>
                   {option}
                 </MenuItem>
