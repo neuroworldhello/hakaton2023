@@ -18,7 +18,7 @@ import {
 import { Add } from '@mui/icons-material';
 import {useState} from "react";
 import {CustomDialog} from "./CustomDialog";
-import {AddPracticeDialog} from "./AddPracticeDialog";
+import {AddPracticeDialogContent} from "./AddPracticeDialogContent";
 
 const TestData = [
   {
@@ -78,7 +78,7 @@ function BestPractices() {
   }
 
   function dialogContent () {
-    return <AddPracticeDialog />
+    return <AddPracticeDialogContent />
   }
 
   return (

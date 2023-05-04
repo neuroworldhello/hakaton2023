@@ -1,7 +1,7 @@
 import React from "react";
 import {MenuItem, Select, TextField} from "@mui/material";
 
-export function AddPracticeDialog() {
+export function AddPracticeDialogContent() {
     return (
         <div className='mt-4 w-full'>
             <div className='m-2'>
