@@ -106,7 +106,7 @@ jobs:
         run: envsubst < docker-compose.yml.tpl > docker-compose.yml
       - name: Copy files to remote server
         run: |
-          scp -o StrictHostKeyChecking=no -r docker-compose.yml .env ubuntu@${VM_HOST_IP}:~
+          scp -o StrictHostKeyChecking=no -r docker-compose.yml .env nginx.conf ubuntu@${VM_HOST_IP}:~
       - name: Start services
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${VM_HOST_IP} << EOF
