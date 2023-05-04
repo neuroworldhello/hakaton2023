@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.domain.Practice;
+import com.example.backend.dto.PracticeSearchCriteriaDTO;
 import com.example.backend.service.PracticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/practices")
+@RequestMapping("/api/practices")
 public class PracticeController {
     private final PracticeService practiceService;
 
@@ -25,7 +26,7 @@ public class PracticeController {
     }
 
     @PostMapping("/search")
-    public List<Practice> findPractices() {
-        return practiceService.search();
+    public List<Practice> findPractices(@RequestBody PracticeSearchCriteriaDTO searchCriteria) {
+        return practiceService.searchPractices(searchCriteria);
     }
 }
