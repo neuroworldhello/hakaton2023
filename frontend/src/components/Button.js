@@ -1,10 +1,10 @@
 import React from 'react';
 import {Button} from '@mui/material';
 
-const ButtonComponent = (props) => {
+const ButtonComponent = ({className = '', ...props}) => {
   return (
     <Button
-      className="bg-button hover:bg-button-hover text-button-text font-bold py-2 px-4 border border-button-border rounded"
+      className={`${className} bg-button hover:bg-button-hover text-button-text font-bold py-2 px-4 border border-button-border rounded`}
       {...props}
     />
   );

@@ -94,15 +94,16 @@ function BestPractices() {
       <img src={require('../logo.jpg')} alt="logo" />
       {/* Кнопка добавления новой практики */}
       <ButtonComponent
-        variant="contained" sx={{ mt: 2 }}
+        variant="contained"
+        className="ml-16 mt-16"
         startIcon={<Add />}
         onClick={handleCardDialogOpen}
       >
         Добавить новую практику
       </ButtonComponent>
 
-      <Grid container sx={{ marginTop: 2 }}>
-        <Grid item xs={12} sm={4} sx={{ pr: 2 }}>
+      <Grid container className="mt-16 px-8">
+        <Grid item xs={12} sm={4} className="px-8">
           <TextField
             label="Поиск"
             fullWidth
@@ -112,7 +113,7 @@ function BestPractices() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </Grid>
-        <Grid item xs={12} sm={4} sx={{ px: 2 }}>
+        <Grid item xs={12} sm={4} className="px-8">
           <Select
             displayEmpty
             value={category}
@@ -127,7 +128,7 @@ function BestPractices() {
             ))}
           </Select>
         </Grid>
-        <Grid item xs={12} sm={4} sx={{ px: 2 }}>
+        <Grid item xs={12} sm={4} className="px-8">
           <Select
             displayEmpty
             value={team}
