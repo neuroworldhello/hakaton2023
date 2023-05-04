@@ -72,6 +72,11 @@ function BestPractices() {
     setCardDialogOpen(false);
   }
 
+  const handleSaveButtonClick = () => {
+    setCardDialogOpen(false);
+    console.log('click-click')
+  }
+
   function dialogContent () {
     return <AddPracticeDialog />
   }
@@ -175,6 +180,9 @@ function BestPractices() {
         open={cardDialogOpen}
         onClose={handleCardDialogClose}
         content={dialogContent()}
+        title='Добавление практики'
+        successButtonTitle="Сохранить"
+        successButtonAction={handleSaveButtonClick}
       />
     </div>
   );
