@@ -5,18 +5,24 @@ import com.example.backend.domain.Category;
 import com.example.backend.domain.Practice;
 import com.example.backend.domain.Team;
 import com.example.backend.dto.PracticeDto;
+import com.example.backend.dto.PracticeSearchCriteria;
 import com.example.backend.repository.AuthorRepository;
 import com.example.backend.repository.CategoryRepository;
 import com.example.backend.repository.PracticeRepository;
 import com.example.backend.repository.TeamRepository;
 import com.example.backend.service.PracticeService;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.testcontainers.containers.PostgreSQLContainer;
+
+import java.util.List;
+import java.util.Optional;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -86,18 +92,101 @@ class PracticeServiceImplTest {
         assertEquals(practice.getName(), retrievedPractice.getName());
     }
 
+    @Test
+    void searchPractices_ShouldReturnMatchingPractices_WhenSearchCriteriaProvided() {
+        // given
+        Author author = getAuthor();
+        Category category = getCategory();
+        Team team = getTeam();
+        Practice practice1 = Practice.builder()
+                .name("Practice 1")
+                .description("Description 1")
+                .documentLink("Link 1")
+                .rating(1)
+                .author(author)
+                .category(category)
+                .team(team)
+                .build();
+        Practice practice2 = Practice.builder()
+                .name("Practice 2")
+                .description("Description 2")
+                .documentLink("Link 2")
+                .rating(2)
+                .author(author)
+                .category(category)
+                .team(team)
+                .build();
+        Practice practice3 = Practice.builder()
+                .name("Practice 3")
+                .description("Description 3")
+                .documentLink("Link 3")
+                .rating(3)
+                .author(author)
+                .category(category)
+                .team(team)
+                .build();
+        practiceRepository.saveAll(List.of(practice1, practice2, practice3));
+
+        PracticeSearchCriteria searchCriteria = new PracticeSearchCriteria();
+        searchCriteria.setName("Practice 2");
+        searchCriteria.setSortByRatingDirection(Sort.Direction.ASC);
+
+        // when
+        List<Practice> result = practiceService.searchPractices(searchCriteria);
+
+        // then
+        assertEquals(1, result.size());
+        assertEquals(practice2, result.get(0));
+    }
+
+    @Test
+    public void testRatePractice() {
+        // Создаем тестовую практику
+        Practice practice = Practice.builder()
+                .name("Test Practice")
+                .description("Test description")
+                .documentLink("http://test.com")
+                .rating(0)
+                .author(getAuthor())
+                .category(getCategory())
+                .team(getTeam())
+                .build();
+        practice = practiceRepository.save(practice);
+
+        // Вызываем метод ratePractice для тестовой практики
+        Practice ratedPractice = practiceService.ratePractice(practice.getId());
+
+        // Проверяем, что рейтинг практики был увеличен на единицу
+        assertEquals(practice.getRating() + 1, ratedPractice.getRating());
+
+        // Убеждаемся, что изменения были сохранены в базе данных
+        Optional<Practice> updatedPractice = practiceRepository.findById(practice.getId());
+        assertNotNull(updatedPractice);
+        assertEquals(practice.getRating() + 1, updatedPractice.get().getRating());
+    }
+
+    private Team getTeam() {
+        return teamRepository.save(Team.builder().name("Test team").build());
+    }
+
+    private Category getCategory() {
+        return categoryRepository.save(Category.builder().name(" Test category").build());
+    }
+
+    @NotNull
+    private Author getAuthor() {
+        return authorRepository.save(Author.builder().name("Test author").build());
+    }
+
     private PracticeDto createPractice() {
-        Author author = authorRepository.save(Author.builder().name("Test author").build());
-        Category category = categoryRepository.save(Category.builder().name(" Test category").build());
-        Team team = teamRepository.save(Team.builder().name("Test team").build());
         return PracticeDto.builder()
                 .name("Test Practice")
                 .description("Test Description")
                 .documentLink("Test Document Link")
                 .rating(5)
-                .category(category.getName())
-                .team(team.getName())
-                .author(author.getName())
+                .category(getCategory().getName())
+                .team(getTeam().getName())
+                .author(getAuthor().getName())
                 .build();
     }
 }
