@@ -1,0 +1,41 @@
+POST http://localhost:8080/api/practices/search
+Content-Type: application/json
+
+{
+  "name": "name",
+  "author": "le2"
+}
+
+###
+
+POST http://localhost:8080/api/practices/search
+Content-Type: application/json
+
+{
+  "name": "name",
+  "author": "name",
+  "category": "cat name",
+  "team": "team"
+}
+
+###
+
+POST http://localhost:8080/api/practices
+Content-Type: application/json
+
+{
+  "name": "name",
+  "description": "description",
+  "documentLink": "documentLink",
+  "team": "Hello нейроWorld",
+  "category": "Аналитика",
+  "author": "le"
+
+}
+
+###
+
+POST http://localhost:8080/api/practices/1/rate
+
+
+###
