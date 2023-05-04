@@ -2,7 +2,6 @@ import * as React from 'react';
 import {useState} from 'react';
 import {
   AppBar,
-  Button,
   Grid,
   MenuItem,
   Select,
@@ -11,12 +10,14 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  FormControl, InputLabel, IconButton,
   TextField,
   Toolbar,
   Typography,
 } from '@mui/material';
-import {Add} from '@mui/icons-material';
 import {PracticeDialog} from "./PracticeDialog";
+import Add from '@mui/icons-material/Add';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ButtonComponent from "./Button";
 
 const TestData = [
@@ -65,6 +66,14 @@ function BestPractices() {
     setDialogOpen(true);
   }
 
+  const handleExit = () => {
+
+  }
+
+  const handleLike = () => {
+
+  }
+
   return (
     <div className="bg-background-page text-body-font">
       <AppBar position="static" className="bg-page-header">
@@ -72,10 +81,12 @@ function BestPractices() {
           <Typography variant="h6" className="text-heading-font" component="div" sx={{ flexGrow: 1 }}>
             Наилучшие практики
           </Typography>
-          <ButtonComponent color="inherit">Войти</ButtonComponent>
+          <ButtonComponent onClick={handleExit}>Выйти</ButtonComponent>
         </Toolbar>
       </AppBar>
-      <img src={require('../logo.jpg')} alt="logo" />
+      <div>
+        <img src={require('../logo.jpg')} alt="logo" height="150" className="ml-16 mt-16" />
+      </div>
       {/* Кнопка добавления новой практики */}
       <ButtonComponent
         variant="contained"
@@ -98,34 +109,44 @@ function BestPractices() {
           />
         </Grid>
         <Grid item xs={12} sm={4} className="px-8">
-          <Select
-            displayEmpty
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            fullWidth
-            margin="normal"
-          >
-            {categoryOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
+          <FormControl className="w-full">
+            <InputLabel id="category">Категория</InputLabel>
+            <Select
+              displayEmpty
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              fullWidth
+              id="category"
+              label="Категория"
+              margin="normal"
+            >
+              {categoryOptions.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item xs={12} sm={4} className="px-8">
-          <Select
-            displayEmpty
-            value={team}
-            onChange={(e) => setTeam(e.target.value)}
-            fullWidth
-            margin="normal"
-          >
-            {categoryOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
+          <FormControl className="w-full">
+            <InputLabel id="team">Команда</InputLabel>
+            <Select
+              displayEmpty
+              value={team}
+              onChange={(e) => setTeam(e.target.value)}
+              fullWidth
+              id="team"
+              label="Команда"
+              margin="normal"
+            >
+              {categoryOptions.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
       </Grid>
 
@@ -150,9 +171,9 @@ function BestPractices() {
                   <TableCell>{item.votes}</TableCell>
                   <TableCell>{item.author}</TableCell>
                   <TableCell>
-                    <Button variant="outlined" color="primary">
-                      Голосовать
-                    </Button>
+                    <IconButton aria-label="upload picture" className="text-button" disabled={false} onClick={handleLike}>
+                      <ThumbUpIcon />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}
