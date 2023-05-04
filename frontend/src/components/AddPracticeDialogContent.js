@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {InputLabel, MenuItem, Select, TextField} from "@mui/material";
 import {categories, teams} from "./consts";
 
@@ -74,7 +74,7 @@ export function AddPracticeDialogContent({practice, setPractice}) {
             <div className='m-2 w-full'>
                 <TextField
                     required
-                    value={practice.link || ''}
+                    value={practice.documentLink || ''}
                     className='w-full'
                     label="Ссылка на документ"
                     variant="outlined"
