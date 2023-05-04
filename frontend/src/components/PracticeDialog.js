@@ -21,6 +21,7 @@ export function PracticeDialog({dialogOpen, setDialogOpen}) {
         fetch("/api/practices", requestOptions)
             .then(response => console.log(response.data))
             .catch(error => console.log(error))
+        setPractice({})
     }
 
     return (

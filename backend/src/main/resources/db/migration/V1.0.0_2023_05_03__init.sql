@@ -20,8 +20,8 @@ CREATE TABLE practice
 (
     practice_id   SERIAL PRIMARY KEY,
     name          VARCHAR(255) NOT NULL,
-    description   TEXT         NOT NULL,
-    document_link VARCHAR(255) NOT NULL,
+    description   TEXT,
+    document_link TEXT         NOT NULL,
     rating        INTEGER,
     team_id       INTEGER      NOT NULL REFERENCES team (team_id) ON DELETE CASCADE,
     category_id   INTEGER      NOT NULL REFERENCES category (category_id) ON DELETE CASCADE,
