@@ -1,7 +1,8 @@
 import React, {useState} from "react";
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import {AddPracticeDialogContent} from "./AddPracticeDialogContent";
 import axios from "axios";
+import ButtonComponent from "./Button";
 
 export function PracticeDialog({dialogOpen, setDialogOpen}) {
     const [practice, setPractice] = useState({});
@@ -32,7 +33,7 @@ export function PracticeDialog({dialogOpen, setDialogOpen}) {
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleSaveButtonClick}>Добавить</Button>
+                <ButtonComponent onClick={handleSaveButtonClick}>Добавить</ButtonComponent>
             </DialogActions>
         </Dialog>
     )

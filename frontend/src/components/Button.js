@@ -4,7 +4,7 @@ import {Button} from '@mui/material';
 const ButtonComponent = ({className = '', ...props}) => {
   return (
     <Button
-      className={`${className} bg-button hover:bg-button-hover text-button-text font-bold py-2 px-4 border border-button-border rounded`}
+      className={`${className} px-8 py-2 bg-button hover:bg-button-hover text-button-text font-bold border border-button-border rounded`}
       {...props}
     />
   );
