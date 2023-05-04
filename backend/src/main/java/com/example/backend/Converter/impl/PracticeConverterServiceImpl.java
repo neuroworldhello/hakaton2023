@@ -27,7 +27,7 @@ public class PracticeConverterServiceImpl implements PracticeConverterService {
         Team team = teamRepository.findByName(practiceDto.getTeam())
                 .orElseThrow(EntityNotFoundException::new);
         Author author = authorRepository.findByName(practiceDto.getAuthor())
-                .orElseThrow(EntityNotFoundException::new);
+                .orElse(createAuthor(practiceDto.getAuthor()));
         return Practice.builder()
                 .id(practiceDto.getId())
                 .name(practiceDto.getName())
@@ -38,6 +38,10 @@ public class PracticeConverterServiceImpl implements PracticeConverterService {
                 .team(team)
                 .category(category)
                 .build();
+    }
+
+    private Author createAuthor(String author) {
+        return authorRepository.save(Author.builder().name(author).build());
     }
 
     @Override

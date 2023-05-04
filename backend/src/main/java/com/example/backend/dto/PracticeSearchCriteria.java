@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PracticeSearchCriteriaDTO {
+public class PracticeSearchCriteria {
     private String name;
     private String author;
     private String category;

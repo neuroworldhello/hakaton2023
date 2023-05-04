@@ -3,7 +3,7 @@ package com.example.backend.service.impl;
 import com.example.backend.Converter.PracticeConverterService;
 import com.example.backend.domain.Practice;
 import com.example.backend.dto.PracticeDto;
-import com.example.backend.dto.PracticeSearchCriteriaDTO;
+import com.example.backend.dto.PracticeSearchCriteria;
 import com.example.backend.repository.PracticeRepository;
 import com.example.backend.service.PracticeService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static com.example.backend.repository.criteria.PracticeSpecification.*;
 
@@ -37,7 +38,7 @@ public class PracticeServiceImpl implements PracticeService {
     }
 
     @Override
-    public List<Practice> searchPractices(PracticeSearchCriteriaDTO searchCriteria) {
+    public List<Practice> searchPractices(PracticeSearchCriteria searchCriteria) {
         Specification<Practice> spec = Specification.where(null);
 
         if (searchCriteria.getAuthor() != null) {
@@ -57,5 +58,16 @@ public class PracticeServiceImpl implements PracticeService {
         }
 
         return practiceRepository.findAll(spec);
+    }
+
+    @Override
+    public Practice ratePractice(Long id) {
+        Practice practice = practiceRepository.findById(id)
+                .orElseThrow(() ->
+                        new NoSuchElementException("Practice not found with id: " + id));
+
+        practice.setRating(practice.getRating() + 1);
+
+        return practiceRepository.save(practice);
     }
 }
