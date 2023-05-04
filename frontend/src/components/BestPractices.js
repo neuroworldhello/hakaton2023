@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   AppBar,
   Toolbar,
-  IconButton,
   Typography,
   Grid,
   TextField,
