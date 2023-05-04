@@ -4,6 +4,7 @@ import {AddPracticeDialogContent} from "./AddPracticeDialogContent";
 import {toastOptions} from "./consts";
 import {toast} from "react-toastify";
 import Button from "./Button";
+import axios from "axios";
 
 export function PracticeDialog({dialogOpen, setDialogOpen}) {
     const [practice, setPractice] = useState({});
@@ -15,20 +16,8 @@ export function PracticeDialog({dialogOpen, setDialogOpen}) {
     const handleSaveButtonClick = () => {
         setDialogOpen(false);
 
-        const requestOptions = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(practice)
-        };
-
-        fetch("/api/practices", requestOptions)
-            .then((response) => {
-                if (response.ok) {
-                    toast('Практика сохранена', toastOptions)
-                } else {
-                    throw new Error('Something went wrong')
-                }
-            })
+        axios.post("/api/practices", practice)
+            .then(() => toast('Практика ' + practice.name + ' сохранена', toastOptions))
             .catch(() => toast.error('Ошибка сохранения практики', toastOptions));
         setPractice({})
     }
