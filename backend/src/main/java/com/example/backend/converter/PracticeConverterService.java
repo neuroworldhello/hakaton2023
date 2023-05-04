@@ -1,4 +1,4 @@
-package com.example.backend.Converter;
+package com.example.backend.converter;
 
 import com.example.backend.domain.Practice;
 import com.example.backend.dto.PracticeDto;

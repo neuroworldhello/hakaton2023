@@ -1,6 +1,6 @@
-package com.example.backend.Converter.impl;
+package com.example.backend.converter.impl;
 
-import com.example.backend.Converter.PracticeConverterService;
+import com.example.backend.converter.PracticeConverterService;
 import com.example.backend.domain.Author;
 import com.example.backend.domain.Category;
 import com.example.backend.domain.Practice;

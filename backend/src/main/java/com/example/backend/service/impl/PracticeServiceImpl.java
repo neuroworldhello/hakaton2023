@@ -1,6 +1,6 @@
 package com.example.backend.service.impl;
 
-import com.example.backend.Converter.PracticeConverterService;
+import com.example.backend.converter.PracticeConverterService;
 import com.example.backend.domain.Practice;
 import com.example.backend.dto.PracticeDto;
 import com.example.backend.dto.PracticeSearchCriteria;
