@@ -1,23 +1,22 @@
 import * as React from 'react';
+import {useState} from 'react';
 import {
   AppBar,
-  Toolbar,
-  Typography,
+  Button,
   Grid,
-  TextField,
-  Select,
   MenuItem,
+  Select,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  Button,
+  TextField,
+  Toolbar,
+  Typography,
 } from '@mui/material';
-import { Add } from '@mui/icons-material';
-import {useState} from "react";
-import {CustomDialog} from "./CustomDialog";
-import {AddPracticeDialogContent} from "./AddPracticeDialogContent";
+import {Add} from '@mui/icons-material';
+import {PracticeDialog} from "./PracticeDialog";
 import ButtonComponent from "./Button";
 
 const TestData = [
@@ -60,25 +59,10 @@ function BestPractices() {
   const [category, setCategory] = React.useState('');
   const [team, setTeam] = React.useState('');
   const [search, setSearch] = React.useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-
-  const [cardDialogOpen, setCardDialogOpen] = useState(false);
-
-  const handleCardDialogOpen = () => {
-    setCardDialogOpen(true);
-  }
-
-  const handleCardDialogClose = () => {
-    setCardDialogOpen(false);
-  }
-
-  const handleSaveButtonClick = () => {
-    setCardDialogOpen(false);
-    console.log('click-click')
-  }
-
-  function dialogContent () {
-    return <AddPracticeDialogContent />
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
   }
 
   return (
@@ -97,7 +81,7 @@ function BestPractices() {
         variant="contained"
         className="ml-16 mt-16"
         startIcon={<Add />}
-        onClick={handleCardDialogOpen}
+        onClick={handleDialogOpen}
       >
         Добавить новую практику
       </ButtonComponent>
@@ -174,14 +158,7 @@ function BestPractices() {
               ))}
             </TableBody>
           </Table>
-      <CustomDialog
-        open={cardDialogOpen}
-        onClose={handleCardDialogClose}
-        content={dialogContent()}
-        title='Добавление практики'
-        successButtonTitle="Сохранить"
-        successButtonAction={handleSaveButtonClick}
-      />
+      <PracticeDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen}/>
     </div>
   );
 }
