@@ -12,7 +12,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Button,
+  Button, FormControl, InputLabel,
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import {useState} from "react";
@@ -88,10 +88,12 @@ function BestPractices() {
           <Typography variant="h6" className="text-heading-font" component="div" sx={{ flexGrow: 1 }}>
             Наилучшие практики
           </Typography>
-          <ButtonComponent color="inherit">Войти</ButtonComponent>
+          <ButtonComponent >Выйти</ButtonComponent>
         </Toolbar>
       </AppBar>
-      <img src={require('../logo.jpg')} alt="logo" />
+      <div>
+        <img src={require('../logo.jpg')} alt="logo" height="150" className="ml-16 mt-16" />
+      </div>
       {/* Кнопка добавления новой практики */}
       <ButtonComponent
         variant="contained"
@@ -114,34 +116,44 @@ function BestPractices() {
           />
         </Grid>
         <Grid item xs={12} sm={4} className="px-8">
-          <Select
-            displayEmpty
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            fullWidth
-            margin="normal"
-          >
-            {categoryOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
+          <FormControl className="w-full">
+            <InputLabel id="category">Категория</InputLabel>
+            <Select
+              displayEmpty
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              fullWidth
+              id="category"
+              label="Категория"
+              margin="normal"
+            >
+              {categoryOptions.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item xs={12} sm={4} className="px-8">
-          <Select
-            displayEmpty
-            value={team}
-            onChange={(e) => setTeam(e.target.value)}
-            fullWidth
-            margin="normal"
-          >
-            {categoryOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
+          <FormControl className="w-full">
+            <InputLabel id="team">Команда</InputLabel>
+            <Select
+              displayEmpty
+              value={team}
+              onChange={(e) => setTeam(e.target.value)}
+              fullWidth
+              id="team"
+              label="Команда"
+              margin="normal"
+            >
+              {categoryOptions.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
       </Grid>
 
