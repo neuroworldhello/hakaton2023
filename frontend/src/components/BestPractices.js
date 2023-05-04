@@ -89,6 +89,7 @@ function BestPractices() {
           <Button color="inherit">Войти</Button>
         </Toolbar>
       </AppBar>
+      <img src={require('../logo.jpg')}  />
       {/* Кнопка добавления новой практики */}
       <Button
         variant="contained" sx={{ mt: 2 }}
