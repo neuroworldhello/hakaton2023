@@ -11,6 +11,7 @@ import java.util.Objects;
 @ToString
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "practice")
 @NoArgsConstructor
 public class Practice {
