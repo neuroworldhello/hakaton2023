@@ -7,6 +7,7 @@ import com.example.backend.dto.PracticeSearchCriteria;
 import com.example.backend.repository.PracticeRepository;
 import com.example.backend.service.PracticeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +58,9 @@ public class PracticeServiceImpl implements PracticeService {
             spec = spec.and(byName(searchCriteria.getName()));
         }
 
-        return practiceRepository.findAll(spec);
+        Sort sort = Sort.by(searchCriteria.getSortByRatingDirection(), "rating");
+
+        return practiceRepository.findAll(spec, sort);
     }
 
     @Override
