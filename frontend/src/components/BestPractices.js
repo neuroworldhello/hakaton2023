@@ -17,7 +17,48 @@ import {
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
 
+const TestData = [
+  {
+    id: 1,
+    name: 'Практика 1',
+    category: 'Категория 1',
+    team: 'Команда 1',
+    votes: 10,
+    author: 'Автор 1',
+  },
+  {
+    id: 2,
+    name: 'Практика 2',
+    category: 'Категория 2',
+    team: 'Команда 2',
+    votes: 8,
+    author: 'Автор 2',
+  },
+  {
+    id: 3,
+    name: 'Практика 3',
+    category: 'Категория 1',
+    team: 'Команда 3',
+    votes: 5,
+    author: 'Автор 3',
+  },
+];
+
+const categoryOptions = [
+  'Все',
+  'Frontend',
+  'Backend',
+  'DevOps',
+  'Mobile',
+  'Data Science',
+];
+
 function BestPractices() {
+  const [category, setCategory] = React.useState('');
+  const [team, setTeam] = React.useState('');
+  const [search, setSearch] = React.useState('');
+
+
   return (
     <div>
       <AppBar position="static">
@@ -31,21 +72,55 @@ function BestPractices() {
           <Button color="inherit">Войти</Button>
         </Toolbar>
       </AppBar>
+      {/* Кнопка добавления новой практики */}
+      <Button variant="contained" sx={{ mt: 2 }} startIcon={<Add />}>
+        Добавить новую практику
+      </Button>
+
+
       <Grid container sx={{ marginTop: 2 }}>
-        <Grid item xs={12} sm={4} md={3}>
-          {/* Фильтры */}
-          <Typography variant="h6" gutterBottom>Фильтры</Typography>
-          <TextField label="Поиск" fullWidth margin="normal" />
-          <Select displayEmpty value="" fullWidth margin="normal">
-            <MenuItem value="">Категория</MenuItem>
-            {/* Опции для категорий */}
-          </Select>
-          <Select displayEmpty value="" fullWidth margin="normal">
-            <MenuItem value="">Команда</MenuItem>
-            {/* Опции для команд */}
+        <Grid item xs={12} sm={4} sx={{ pr: 2 }}>
+          <TextField
+            label="Поиск"
+            fullWidth
+            margin="normal"
+            value={search}
+            className="m-0"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12} sm={4} sx={{ px: 2 }}>
+          <Select
+            displayEmpty
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            fullWidth
+            margin="normal"
+          >
+            {categoryOptions.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
           </Select>
         </Grid>
-        <Grid item xs={12} sm={8} md={9}>
+        <Grid item xs={12} sm={4} sx={{ px: 2 }}>
+          <Select
+            displayEmpty
+            value={team}
+            onChange={(e) => setTeam(e.target.value)}
+            fullWidth
+            margin="normal"
+          >
+            {categoryOptions.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </Grid>
+      </Grid>
+
           {/* Таблица */}
           <Table>
             <TableHead>
@@ -59,15 +134,22 @@ function BestPractices() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* Строки таблицы */}
+              {TestData.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.category}</TableCell>
+                  <TableCell>{item.team}</TableCell>
+                  <TableCell>{item.votes}</TableCell>
+                  <TableCell>{item.author}</TableCell>
+                  <TableCell>
+                    <Button variant="outlined" color="primary">
+                      Голосовать
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
-          {/* Кнопка добавления новой практики */}
-          <Button variant="contained" sx={{ mt: 2 }} startIcon={<Add />}>
-            Добавить новую практику
-          </Button>
-        </Grid>
-      </Grid>
     </div>
   );
 }
