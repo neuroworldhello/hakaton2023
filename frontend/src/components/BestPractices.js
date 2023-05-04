@@ -1,24 +1,23 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import {
   AppBar,
-  Toolbar,
-  Typography,
   Grid,
-  TextField,
-  Select,
   MenuItem,
+  Select,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
   FormControl, InputLabel, IconButton,
+  TextField,
+  Toolbar,
+  Typography,
 } from '@mui/material';
+import {PracticeDialog} from "./PracticeDialog";
 import Add from '@mui/icons-material/Add';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import { useEffect, useState } from "react";
-import {CustomDialog} from "./CustomDialog";
-import {AddPracticeDialogContent} from "./AddPracticeDialogContent";
 import ButtonComponent from "./Button";
 import axios from "axios";
 
@@ -62,25 +61,11 @@ function BestPractices() {
   const [category, setCategory] = React.useState('');
   const [team, setTeam] = React.useState('');
   const [search, setSearch] = React.useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [practices, setPractices] = React.useState([]);
 
-  const [cardDialogOpen, setCardDialogOpen] = useState(false);
-
-  const handleCardDialogOpen = () => {
-    setCardDialogOpen(true);
-  }
-
-  const handleCardDialogClose = () => {
-    setCardDialogOpen(false);
-  }
-
-  const handleSaveButtonClick = () => {
-    setCardDialogOpen(false);
-    console.log('click-click')
-  }
-
-  function dialogContent () {
-    return <AddPracticeDialogContent />
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
   }
 
   const handleExit = () => {
@@ -115,7 +100,7 @@ function BestPractices() {
         variant="contained"
         className="ml-16 mt-16"
         startIcon={<Add />}
-        onClick={handleCardDialogOpen}
+        onClick={handleDialogOpen}
       >
         Добавить новую практику
       </ButtonComponent>
@@ -206,14 +191,7 @@ function BestPractices() {
               ))}
             </TableBody>
           </Table>
-      <CustomDialog
-        open={cardDialogOpen}
-        onClose={handleCardDialogClose}
-        content={dialogContent()}
-        title='Добавление практики'
-        successButtonTitle="Сохранить"
-        successButtonAction={handleSaveButtonClick}
-      />
+      <PracticeDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen}/>
     </div>
   );
 }
