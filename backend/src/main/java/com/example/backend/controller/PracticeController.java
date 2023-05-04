@@ -16,7 +16,7 @@ public class PracticeController {
     private final PracticeService practiceService;
 
     @PostMapping
-    public Practice createPractice(@RequestBody PracticeDto practiceDto) {
+    public PracticeDto createPractice(@RequestBody PracticeDto practiceDto) {
         return practiceService.savePractice(practiceDto);
     }
 

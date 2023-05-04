@@ -6,7 +6,7 @@ import com.example.backend.dto.PracticeDto;
 import java.util.List;
 
 public interface PracticeService {
-    Practice savePractice(PracticeDto practiceDto);
+    PracticeDto savePractice(PracticeDto practiceDto);
 
     List<Practice> search();
 
