@@ -2,21 +2,13 @@ POST http://localhost:8080/practices
 content-type: application/json
 
 {
-  "name": "Первая практика",
-  "description": "Описание первой практики",
+  "name": "Еще одна практика",
+  "description": "Описание еще одной практики",
   "documentLink": "https://lala",
   "rating": 0,
-  "team": {
-    "id": 2,
-    "name": "Hello нейроWorld"
-  },
-  "category": {
-    "id": 2,
-    "name": "Разработка"
-  },
-  "author": {
-    "name": "Кодер"
-  }
+  "team":  "Hello нейроWorld",
+  "category": "Разработка",
+  "author":  "Кодер"
 }
 
 ###

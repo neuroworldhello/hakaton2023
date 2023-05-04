@@ -1,9 +1,9 @@
 package com.example.backend.service.impl;
 
-import com.example.backend.domain.Author;
+import com.example.backend.Converter.PracticeConverterService;
 import com.example.backend.domain.Practice;
+import com.example.backend.dto.PracticeDto;
 import com.example.backend.dto.PracticeSearchCriteriaDTO;
-import com.example.backend.repository.AuthorRepository;
 import com.example.backend.repository.PracticeRepository;
 import com.example.backend.service.PracticeService;
 import lombok.RequiredArgsConstructor;
@@ -20,15 +20,12 @@ import static com.example.backend.repository.criteria.PracticeSpecification.*;
 @RequiredArgsConstructor
 public class PracticeServiceImpl implements PracticeService {
     private final PracticeRepository practiceRepository;
-    private final AuthorRepository authorRepository;
+    private final PracticeConverterService practiceConverterService;
 
-    public Practice savePractice(Practice practice) {
-        Author author = practice.getAuthor();
-        if (author.getId() == null) {
-            Author saved = authorRepository.save(author);
-            practice.setAuthor(saved);
-        }
-        return practiceRepository.save(practice);
+    public PracticeDto savePractice(PracticeDto practiceDto) {
+
+        Practice practice = practiceRepository.save(practiceConverterService.toEntity(practiceDto));
+        return practiceConverterService.toDto(practice);
     }
 
     public List<Practice> search() {
