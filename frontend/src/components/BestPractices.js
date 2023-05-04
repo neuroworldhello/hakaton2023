@@ -16,10 +16,11 @@ import {
 } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import {useState} from "react";
+import { useEffect, useState } from "react";
 import {CustomDialog} from "./CustomDialog";
 import {AddPracticeDialogContent} from "./AddPracticeDialogContent";
 import ButtonComponent from "./Button";
+import axios from "axios";
 
 const TestData = [
   {
@@ -61,7 +62,7 @@ function BestPractices() {
   const [category, setCategory] = React.useState('');
   const [team, setTeam] = React.useState('');
   const [search, setSearch] = React.useState('');
-
+  const [practices, setPractices] = React.useState([]);
 
   const [cardDialogOpen, setCardDialogOpen] = useState(false);
 
@@ -83,12 +84,18 @@ function BestPractices() {
   }
 
   const handleExit = () => {
-
+      return axios.get('/logout');
   }
 
   const handleLike = () => {
 
   }
+
+  useEffect(() => {
+    // axios.get(``)
+    //   .then((response) => setPractices(response.data));
+    setPractices(TestData);
+  },[search, team, category]);
 
   return (
     <div className="bg-background-page text-body-font">
@@ -179,9 +186,13 @@ function BestPractices() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {TestData.map((item) => (
+              {practices.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell>{item.name}</TableCell>
+                  <TableCell>
+                    <a href={item.link} target="_blank" rel="noreferrer" className="text-black">
+                      {item.name}
+                    </a>
+                  </TableCell>
                   <TableCell>{item.category}</TableCell>
                   <TableCell>{item.team}</TableCell>
                   <TableCell>{item.votes}</TableCell>
