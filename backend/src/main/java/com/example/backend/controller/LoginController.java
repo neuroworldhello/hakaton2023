@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -33,6 +34,12 @@ public class LoginController {
         HttpSession session = req.getSession(true);
         session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
 
+        resp.sendRedirect("/");
+    }
+
+    @GetMapping("/logout")
+    public void logout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.addCookie(new Cookie("JSESSIONID",""));
         resp.sendRedirect("/");
     }
 }

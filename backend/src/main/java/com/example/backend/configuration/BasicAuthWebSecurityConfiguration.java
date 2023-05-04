@@ -27,19 +27,20 @@ public class BasicAuthWebSecurityConfiguration
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
        .authorizeHttpRequests((requests) -> requests
-               .requestMatchers("/login*").permitAll()
+               .requestMatchers("/login.html").permitAll()
+               .requestMatchers("/login").permitAll()
+               .requestMatchers("/logout").permitAll()
                .requestMatchers("/style.css").permitAll()
                .requestMatchers("/script.js").permitAll()
                 .anyRequest().authenticated()
         )
-                .formLogin((form) -> form
-                        .loginPage("/login.html")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/", true)
-                        .permitAll()
-                )
-                .logout((logout) -> logout.permitAll())
-                .exceptionHandling().accessDeniedPage("/access-denied");
+        .formLogin((form) -> form
+                .loginPage("/login.html")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/", true)
+                .permitAll()
+        )
+        .exceptionHandling().accessDeniedPage("/access-denied");
         return http.build();
     }
 
