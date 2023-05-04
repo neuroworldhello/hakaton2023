@@ -16,6 +16,9 @@ import {
   Button,
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
+import {useState} from "react";
+import {CustomDialog} from "./CustomDialog";
+import {AddPracticeDialog} from "./AddPracticeDialog";
 
 const TestData = [
   {
@@ -59,6 +62,20 @@ function BestPractices() {
   const [search, setSearch] = React.useState('');
 
 
+  const [cardDialogOpen, setCardDialogOpen] = useState(false);
+
+  const handleCardDialogOpen = () => {
+    setCardDialogOpen(true);
+  }
+
+  const handleCardDialogClose = () => {
+    setCardDialogOpen(false);
+  }
+
+  function dialogContent () {
+    return <AddPracticeDialog />
+  }
+
   return (
     <div>
       <AppBar position="static">
@@ -73,10 +90,13 @@ function BestPractices() {
         </Toolbar>
       </AppBar>
       {/* Кнопка добавления новой практики */}
-      <Button variant="contained" sx={{ mt: 2 }} startIcon={<Add />}>
+      <Button
+        variant="contained" sx={{ mt: 2 }}
+        startIcon={<Add />}
+        onClick={handleCardDialogOpen}
+      >
         Добавить новую практику
       </Button>
-
 
       <Grid container sx={{ marginTop: 2 }}>
         <Grid item xs={12} sm={4} sx={{ pr: 2 }}>
@@ -150,6 +170,11 @@ function BestPractices() {
               ))}
             </TableBody>
           </Table>
+      <CustomDialog
+        open={cardDialogOpen}
+        onClose={handleCardDialogClose}
+        content={dialogContent()}
+      />
     </div>
   );
 }
