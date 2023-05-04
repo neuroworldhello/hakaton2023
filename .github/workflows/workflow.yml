@@ -1,4 +1,4 @@
-name: CI-CD
+name: CI
 
 # Запускаем только для ветки master
 on:
@@ -11,6 +11,7 @@ env:
   DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
   DOCKERHUB_REPOSITORY: dronotte
   IMAGE_TAG: ${{ github.sha }}
+  VM_HOST_IP: 158.160.12.108
 
 jobs:
   build:
@@ -90,52 +91,24 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
         with:
-          terraform_version: "1.0.8"
-      - name: Setup Yandex Cloud CLI
-        run: |
-          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
-          export PATH="$PATH:/home/runner/.yandex-cloud/bin"
-#      - name: Get service account key
-#        run: echo "${{ secrets.KEY_JSON }}" > key.json
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: unnecessary
+          name: id_rsa # optional
+          if_key_exists: replace # replace / ignore / fail; optional (defaults to fail)
       - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
-      - name: Terraform init
-        run: terraform init
-      - name: Check terraform file
-        run: cat terraform.tf
-      - name: Terraform apply
-        run: |
-          terraform apply \
-            -auto-approve \
-            -var cloud_id=${{ secrets.CLOUD_ID }} \
-            -var cloud_folder_id=${{ secrets.CLOUD_FOLDER_ID }} \
-            -var cloud_zone=${{ secrets.CLOUD_ZONE }}
-            -var sa_key=${{ secrets.KEY_JSON }}
-      - name: Export Terraform output
-        run: terraform output -json > terraform.output.json
-      - name: Set environment variables
-        run: |
-          export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-          export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          export POSTGRES_DB=${{ secrets.POSTGRES_USER }}
+        run: ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
       - name: Create .env file
         run: envsubst < .env.tpl > .env
       - name: Create docker-compose file
         run: envsubst < docker-compose.yml.tpl > docker-compose.yml
-      - name: Check hostname
-        run: echo $(terraform output -raw external_ip)
       - name: Copy files to remote server
         run: |
-          scp -o StrictHostKeyChecking=no -r docker-compose.yml .env ubuntu@$(terraform output -raw external_ip):~
+          scp -o StrictHostKeyChecking=no -r docker-compose.yml .env ubuntu@${VM_HOST_IP}:~
       - name: Start services
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@$(terraform output -raw external_ip) << EOF
-            docker-compose up -d
+          ssh -o StrictHostKeyChecking=no ubuntu@${VM_HOST_IP} << EOF
+            sudo docker-compose up -d
           EOF
