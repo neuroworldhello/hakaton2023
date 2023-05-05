@@ -1,7 +1,9 @@
 package com.example.backend.controller;
 
+import com.example.backend.converter.CommentConverterService;
 import com.example.backend.domain.Comment;
 import com.example.backend.domain.Practice;
+import com.example.backend.dto.CommentDto;
 import com.example.backend.dto.PracticeDto;
 import com.example.backend.dto.PracticeSearchCriteria;
 import com.example.backend.service.CommentService;
@@ -19,6 +21,7 @@ import java.util.List;
 public class PracticeController {
     private final PracticeService practiceService;
     private final CommentService commentService;
+    private final CommentConverterService commentConverterService;
 
     @PostMapping
     public PracticeDto createPractice(@RequestBody PracticeDto practiceDto, Authentication authentication) {
@@ -41,8 +44,9 @@ public class PracticeController {
     }
 
     @GetMapping("/{id}/comments")
-    public List<Comment> getCommentsByPracticeId(@PathVariable Long id) {
-        return commentService.getCommentsByPracticeId(id);
+    public List<CommentDto> getCommentsByPracticeId(@PathVariable Long id) {
+        List<Comment> comments = commentService.getCommentsByPracticeId(id);
+        return commentConverterService.convertToDtoList(comments);
     }
 
     @PostMapping("/{id}/comments")
