@@ -269,6 +269,7 @@ return (
             setPageSize(parseInt(event.target.value, 10));
             setPageNumber(0);
           }}
+          labelRowsPerPage = 'Элементов на странице'
       />
     </div>
   );
