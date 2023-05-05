@@ -1,5 +1,5 @@
 import './App.css';
-import './dist/output.css';
+import './tailwind.css';
 import BestPractices from "./components/BestPractices";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
