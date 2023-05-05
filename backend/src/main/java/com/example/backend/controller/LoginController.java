@@ -1,5 +1,7 @@
 package com.example.backend.controller;
 
+import com.example.backend.domain.Author;
+import com.example.backend.repository.AuthorRepository;
 import com.example.backend.service.Authorisation;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +29,9 @@ public class LoginController {
     @Autowired
     Authorisation authorisation;
 
+    @Autowired
+    AuthorRepository authorRepository;
+
     @GetMapping("/login")
     public void login(HttpServletRequest req, HttpServletResponse resp, String username) throws IOException {
         UsernamePasswordAuthenticationToken authReq
@@ -37,6 +42,13 @@ public class LoginController {
         sc.setAuthentication(auth);
         HttpSession session = req.getSession(true);
         session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
+
+        Author author = authorRepository.findByName(authorisation.getUserName()).orElse(null);
+        if (author == null){
+            authorRepository.save(Author.builder()
+                    .name(authorisation.getUserName())
+                    .build());
+        }
 
         resp.sendRedirect("/");
     }
