@@ -23,6 +23,4 @@ public class Vote {
     private Long authorId;
 
     private Long practiceId;
-
-    private String name;
 }
