@@ -17,7 +17,9 @@ public class CommentConverterServiceImpl implements CommentConverterService {
 
     @Override
     public CommentDto convertToDto(Comment comment) {
-        return modelMapper.map(comment, CommentDto.class);
+        CommentDto commentDto = modelMapper.map(comment, CommentDto.class);
+        commentDto.setAuthor(comment.getAuthor().getName());
+        return commentDto;
     }
 
     @Override

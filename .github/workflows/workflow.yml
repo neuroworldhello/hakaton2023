@@ -41,22 +41,6 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - check-changes
-#    if: needs.check-changes.outputs.backend_changed == 'true'
-#    services:
-#      postgres:
-#        image: postgres:12-alpine
-#        env:
-#          POSTGRES_USER: postgres
-#          POSTGRES_PASSWORD: postgrespass
-#          POSTGRES_DB: best
-#        ports:
-#          - 5432:5432/tcp
-#        options: >-
-#          --health-cmd pg_isready
-#          --health-interval 10s
-#          --health-timeout 5s
-#          --health-retries 5
-    # Собираем backend и frontend компоненты, протестируем их и создаем docker-образы
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -70,10 +54,11 @@ jobs:
 
       - name: Copy frontend artifact to backend
         run: |
-          rsync -av --delete frontend/build/ backend/src/main/resources/static/
+          rsync -av --delete frontend/build/* backend/src/main/resources/static/
 
-      - name: Change permissions for gradlew
-        run: chmod +x backend/gradlew
+      - name: Check copied frontend artifact
+        run: |
+          find backend/
 
       - name: Set up Java 17
         uses: actions/setup-java@v2
@@ -81,26 +66,11 @@ jobs:
           java-version: 17
           distribution: 'adopt'
 
-      - name: Build and test backend
+      - name: Build backend
         timeout-minutes: 10
         run: |
           cd backend
           gradle build -x test
-#        env:
-#          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/best
-#          SPRING_DATASOURCE_USERNAME: postgres
-#          SPRING_DATASOURCE_PASSWORD: postgrespass
-#          SPRING_JPA_HIBERNATE_DDL_AUTO: update
-#          SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: true
-#          SPRING_JPA_SHOW_SQL: true
-
-#      - name: Upload test report
-#        continue-on-error: true
-#        if: always()
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: test-report
-#          path: backend/build/reports/tests/test
 
       - name: Login to Docker Hub
         uses: docker/login-action@v1
