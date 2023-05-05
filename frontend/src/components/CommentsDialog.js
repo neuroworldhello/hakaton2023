@@ -26,7 +26,7 @@ export function CommentsDialog({dialogOpen, setDialogOpen, practiceId}) {
     }
 
     const handleSaveButtonClick = () => {
-        axios.post(`/api/practices/${practiceId}/comments?text=${comment}`)
+      axios.post(`/api/practices/${practiceId}/comments`, { text: comment })
             .then(() => toast('Комментарий добавлен', toastOptions))
             .catch(() => toast.error('Ошибка добавления комментария', toastOptions))
 

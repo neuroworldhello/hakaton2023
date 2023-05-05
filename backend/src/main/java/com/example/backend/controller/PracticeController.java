@@ -3,6 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.converter.CommentConverterService;
 import com.example.backend.domain.Comment;
 import com.example.backend.domain.Practice;
+import com.example.backend.domain.request.AddCommentRequest;
 import com.example.backend.dto.CommentDto;
 import com.example.backend.dto.PracticeDto;
 import com.example.backend.dto.PracticeSearchCriteria;
@@ -10,7 +11,6 @@ import com.example.backend.service.CommentService;
 import com.example.backend.service.PracticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,7 +51,7 @@ public class PracticeController {
     }
 
     @PostMapping("/{id}/comments")
-    public Comment addComment(@PathVariable Long id, @RequestParam String text) {
-        return commentService.addComment(id, text);
+    public Comment addComment(@PathVariable Long id, @RequestBody AddCommentRequest request) {
+        return commentService.addComment(id, request.getText());
     }
 }
