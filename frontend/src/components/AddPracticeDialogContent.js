@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import {categories, teams} from "./consts";
 
@@ -6,33 +6,33 @@ export function AddPracticeDialogContent({practice, setPractice}) {
     const categoryOptions = categories.map(option => <MenuItem key={option} value={option}>{option}</MenuItem>);
     const teamOptions = teams.map(option => <MenuItem key={option} value={option}>{option}</MenuItem>);
 
-    const handleNameChange = (event) => {
-        setPractice({
-            ...practice,
+    const handleNameChange = useCallback((event) => {
+        setPractice(prevState => ({
+            ...prevState,
             name: event.target.value
-        })
-    }
+        }));
+    }, [setPractice]);
 
-    const handleCategoryChange = (event) => {
-        setPractice({
-            ...practice,
+    const handleCategoryChange = useCallback((event) => {
+        setPractice(prevState => ({
+            ...prevState,
             category: event.target.value
-        })
-    }
+        }));
+    }, [setPractice]);
 
-    const handleTeamChange = (event) => {
-        setPractice({
-            ...practice,
+    const handleTeamChange = useCallback((event) => {
+        setPractice(prevState => ({
+            ...prevState,
             team: event.target.value
-        })
-    }
+        }));
+    }, [setPractice]);
 
-    const handleLinkChange = (event) => {
-        setPractice({
-            ...practice,
+    const handleLinkChange = useCallback((event) => {
+        setPractice(prevState => ({
+            ...prevState,
             documentLink: event.target.value
-        })
-    }
+        }));
+    }, [setPractice]);
 
     return (
         <div className='mt-4 w-full'>

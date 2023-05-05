@@ -12,6 +12,8 @@ import com.example.backend.repository.VoteRepository;
 import com.example.backend.service.Authorisation;
 import com.example.backend.service.PracticeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -47,7 +49,7 @@ public class PracticeServiceImpl implements PracticeService {
     }
 
     @Override
-    public List<PracticeDto> searchPractices(PracticeSearchCriteria searchCriteria) {
+    public Page<PracticeDto> searchPractices(PracticeSearchCriteria searchCriteria) {
         Specification<Practice> spec = Specification.where(null);
 
         if (searchCriteria.getAuthor() != null) {
@@ -67,9 +69,10 @@ public class PracticeServiceImpl implements PracticeService {
         }
 
         Sort sort = Sort.by(searchCriteria.getSortByRatingDirection(), "rating");
+        PageRequest pageRequest = PageRequest.of(searchCriteria.getPageNumber(), searchCriteria.getPageSize(), sort);
 
-        return practiceRepository.findAll(spec, sort).stream()
-                .map(practiceConverterService::toDto).toList();
+        return practiceRepository.findAll(spec, pageRequest)
+                .map(practiceConverterService::toDto);
     }
 
     @Override

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   AppBar,
   Grid,
@@ -13,7 +13,8 @@ import {
   FormControl, InputLabel, IconButton,
   TextField,
   Toolbar,
-  Typography,
+  TablePagination,
+  Typography, Tooltip,
 } from '@mui/material';
 import { PracticeDialog } from "./PracticeDialog";
 import Add from '@mui/icons-material/Add';
@@ -36,62 +37,73 @@ function BestPractices() {
   const [practices, setPractices] = React.useState([]);
   const [user, setUser] = React.useState('');
   const [practiceId, setPracticeId] = useState();
+  const [pageSize, setPageSize] = useState(10);
+  const [totalElements, setTotalElements] = useState(0);
+  const [pageNumber, setPageNumber] = useState(0);
 
-  const handlePracticeDialogOpen = () => {
+  const handlePracticeDialogOpen = useCallback(() => {
     setPracticeDialogOpen(true);
-  }
+  }, []);
 
-  const handleExit = () => {
+  const handleExit = useCallback(() => {
     return axios.get('/logout')
-                .then(window.location.href = '/login.html');
-  }
+      .then(window.location.href = '/login.html');
+  }, []);
 
-  const handleSort = () => {
+  const handleSort = useCallback(() => {
     setSortRating(prev => prev === 'DESC' ? 'ASC' : 'DESC');
-  }
+  }, []);
 
-  const handleLike = (id) => {
-    axios.post(`/api/practices/${id}/rate`, id)
-      .then(handleSearch);
-  }
-
-  const handleOpenCommentDialog = (practiceId) => {
+  const handleOpenCommentDialog = useCallback((practiceId) => {
     setPracticeId(practiceId);
     setCommentDialogOpen(true);
-  }
+  }, []);
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     setLoading(true);
     const condition = {
       name: search,
       team: team === 'all' ? null : team,
       category: category === 'all' ? null : category,
-      sortByRatingDirection: sortRating
+      sortByRatingDirection: sortRating,
+      pageSize: pageSize,
+      pageNumber: pageNumber,
     };
     axios.post('/api/practices/search', condition)
-      .then(resp => setPractices(resp.data))
-      .then(() => setLoading(false));
-  }
+        .then(resp => {
+          setPractices(resp.data?.content ?? []);
+          setTotalElements(resp.data?.totalElements ?? []);
+        })
+        .then(() => setLoading(false))
+  }, [search, team, category, sortRating, pageSize, pageNumber]);
 
-  useEffect(() => {
-    axios.post('/api/practices/search', {})
-      .then(resp => setPractices(resp.data))
+useEffect(() => {
+  axios.post('/api/practices/search', {})
+      .then(resp => {
+        setPractices(resp.data?.content ?? []);
+        setTotalElements(resp.data?.totalElements ?? []);
+      })
       .then(() => setLoading(false));
-    axios.get('/username')
+  axios.get('/username')
       .then(resp => setUser(resp.data));
-  }, []);
+}, []);
 
-  useEffect(() => {
+const handleLike = useCallback((id) => {
+  axios.post(`/api/practices/${id}/rate`, id)
+      .then(handleSearch);
+}, [handleSearch]);
+
+useEffect(() => {
+  handleSearch();
+},[pageSize, pageNumber, sortRating]);
+
+const handleKeyDown = useCallback((event) => {
+  if (event.key === 'Enter') {
     handleSearch();
-  }, [sortRating]);
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      handleSearch();
-    }
   }
+}, [handleSearch]);
 
-  return (
+return (
     <div className="bg-background-page ">
       <AppBar position="static" className="bg-page-header">
         <Toolbar>
@@ -109,10 +121,10 @@ function BestPractices() {
       </div>
       {/* Кнопка добавления новой практики */}
       <ButtonComponent
-        variant="contained"
-        className="ml-16 mt-16"
-        startIcon={<Add />}
-        onClick={handlePracticeDialogOpen}
+          variant="contained"
+          className="ml-16 mt-16"
+          startIcon={<Add />}
+          onClick={handlePracticeDialogOpen}
       >
         Добавить новую практику
       </ButtonComponent>
@@ -120,32 +132,32 @@ function BestPractices() {
       <Grid container className="mt-16 px-8">
         <Grid item xs={12} sm={4} className="px-8">
           <TextField
-            label="Поиск"
-            fullWidth
-            margin="normal"
-            value={search}
-            className="m-0"
-            onKeyDown={handleKeyDown}
-            onChange={(e) => setSearch(e.target.value)}
+              label="Поиск"
+              fullWidth
+              margin="normal"
+              value={search}
+              className="m-0"
+              onKeyDown={handleKeyDown}
+              onChange={(e) => setSearch(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={3} className="px-8">
           <FormControl className="w-full">
             <InputLabel id="category">Категория</InputLabel>
             <Select
-              displayEmpty
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              fullWidth
-              id="category"
-              label="Категория"
-              margin="normal"
+                displayEmpty
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                fullWidth
+                id="category"
+                label="Категория"
+                margin="normal"
             >
               <MenuItem key="all" value='all'>Все</MenuItem>
               {categories.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -154,29 +166,29 @@ function BestPractices() {
           <FormControl className="w-full">
             <InputLabel id="team">Команда</InputLabel>
             <Select
-              displayEmpty
-              value={team}
-              onChange={(e) => setTeam(e.target.value)}
-              fullWidth
-              id="team"
-              label="Команда"
-              margin="normal"
+                displayEmpty
+                value={team}
+                onChange={(e) => setTeam(e.target.value)}
+                fullWidth
+                id="team"
+                label="Команда"
+                margin="normal"
             >
               <MenuItem key="all" value='all'>Все</MenuItem>
               {teams.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
               ))}
             </Select>
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={2} className="px-8">
           <ButtonComponent
-            variant="contained"
-            className="w-full h-full"
-            onClick={handleSearch}
-            disabled={loading}
+              variant="contained"
+              className="w-full h-full"
+              onClick={handleSearch}
+              disabled={loading}
           >
             Поиск
           </ButtonComponent>
@@ -187,56 +199,77 @@ function BestPractices() {
       <Table className="bg-background-table mt-16">
         <TableHead className="bg-table-header text-white">
           <TableRow>
-            <TableCell className="text-white">Наилучшие практики</TableCell>
-            <TableCell className="text-white">Категория</TableCell>
-            <TableCell className="text-white">Команда</TableCell>
-            <TableCell className="text-white flex items-center">
-              Количество голосов
-              <IconButton onClick={handleSort} disabled={loading}>
-                <SortIcon className={` text-button-text ${sortRating === 'ASC' && "revert-180"}`} />
-              </IconButton>
+            <TableCell className="text-white" width='50%'>Наилучшие практики</TableCell>
+            <TableCell className="text-white " width='9%'>Категория</TableCell>
+            <TableCell className="text-white " width='9%'>Команда</TableCell>
+            <TableCell width='9%'>
+              <div className="text-white flex items-center">
+                Количество голосов
+                <IconButton onClick={handleSort} disabled={loading}>
+                  <SortIcon className={` text-button-text ${sortRating === 'ASC' && "revert-180"}`} />
+                </IconButton>
+              </div>
             </TableCell>
-            <TableCell className="text-white">Автор</TableCell>
-            <TableCell className="text-white">Голосовать</TableCell>
-            <TableCell className="text-white">Комментарии</TableCell>
+            <TableCell className="text-white " width='9%'>Автор</TableCell>
+            <TableCell className="text-white " width='7%'>Голосовать</TableCell>
+            <TableCell className="text-white " width='7%'>Комментарии</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {practices.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell>
-                <a href={item.documentLink} target="_blank" rel="noreferrer" className="text-black">
-                  {item.name}
-                </a>
-              </TableCell>
-              <TableCell>{item.category}</TableCell>
-              <TableCell>{item.team}</TableCell>
-              <TableCell>{item.rating}</TableCell>
-              <TableCell>{item.author}</TableCell>
-              <TableCell>
-                <IconButton aria-label="upload picture"
-                            className="text-button disabled:text-body-font"
-                            disabled={item.isAlreadyVoted}
-                            onClick={() => handleLike(item.id)}>
-                  <ThumbUpIcon />
-                </IconButton>
-              </TableCell>
-              <TableCell>
-                <IconButton
-                  aria-label="comment button"
-                  className="text-button"
-                  onClick={() => handleOpenCommentDialog(item.id)}
-                >
-                  <TextsmsIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
+              <TableRow key={item.id}>
+                <TableCell>
+                  <a href={item.documentLink} target="_blank" rel="noreferrer" className="text-black">
+                    {item.name}
+                  </a>
+                </TableCell>
+                <TableCell>{item.category}</TableCell>
+                <TableCell>{item.team}</TableCell>
+                <TableCell>{item.rating}</TableCell>
+                <TableCell>{item.author}</TableCell>
+                <TableCell>
+                  <Tooltip title={item.isAlreadyVoted && 'Вы уже проголосовали за эту практику'}>
+                  <span>
+                    <IconButton aria-label="upload picture"
+                                className="text-button disabled:text-body-font"
+                                disabled={item.isAlreadyVoted}
+                                onClick={() => handleLike(item.id)}>
+                      <ThumbUpIcon />
+                    </IconButton>
+                  </span>
+                  </Tooltip>
+                </TableCell>
+                <TableCell>
+                  <IconButton
+                      aria-label="comment button"
+                      className="text-button"
+                      onClick={() => handleOpenCommentDialog(item.id)}
+                  >
+                    <TextsmsIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
           ))}
         </TableBody>
       </Table>
       <PracticeDialog dialogOpen={practiceDialogOpen} setDialogOpen={setPracticeDialogOpen}
                       handleSearch={handleSearch} />
       <CommentsDialog dialogOpen={commentDialogOpen} setDialogOpen={setCommentDialogOpen} practiceId={practiceId}/>
+
+      <TablePagination
+          rowsPerPageOptions={[10, 25, 50, 100]}
+          component="div"
+          count={totalElements}
+          rowsPerPage={pageSize}
+          page={pageNumber}
+          onPageChange={(event, newPage) => {
+            setPageNumber(newPage);
+          }}
+          onRowsPerPageChange={(event) => {
+            setPageSize(parseInt(event.target.value, 10));
+            setPageNumber(0);
+          }}
+      />
     </div>
   );
 }

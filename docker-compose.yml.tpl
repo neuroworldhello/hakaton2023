@@ -9,6 +9,8 @@ services:
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
       POSTGRES_DB: "${POSTGRES_DB}"
     volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
       - /var/lib/postgresql:/var/lib/postgresql
     ports:
       - "5432:5432"
@@ -16,6 +18,9 @@ services:
   backend:
     restart: always
     image: ${DOCKERHUB_REPOSITORY}/backend:latest
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
     environment:
       SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/${POSTGRES_DB}"
       SPRING_DATASOURCE_USERNAME: "${POSTGRES_USER}"
@@ -43,5 +48,8 @@ services:
     depends_on:
       - backend
     volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
       - /etc/letsencrypt:/etc/letsencrypt
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./error.html:/etc/nginx/html/error.html

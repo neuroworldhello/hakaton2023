@@ -11,6 +11,8 @@ import com.example.backend.service.CommentService;
 import com.example.backend.service.PracticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,7 +37,7 @@ public class PracticeController {
     }
 
     @PostMapping("/search")
-    public List<PracticeDto> searchPractices(@RequestBody PracticeSearchCriteria searchCriteria) {
+    public Page<PracticeDto> searchPractices(@RequestBody PracticeSearchCriteria searchCriteria) {
         return practiceService.searchPractices(searchCriteria);
     }
 
