@@ -23,11 +23,13 @@ import ButtonComponent from "./Button";
 import axios from "axios";
 import { categories, teams } from "./consts";
 import {CommentsDialog} from "./CommentsDialog";
+import SortIcon from '@mui/icons-material/Sort';
 
 function BestPractices() {
   const [category, setCategory] = React.useState('all');
   const [team, setTeam] = React.useState('all');
   const [search, setSearch] = React.useState('');
+  const [sortRating, setSortRating] = React.useState('DESC');
   const [practiceDialogOpen, setPracticeDialogOpen] = useState(false);
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
   const [practices, setPractices] = React.useState([]);
@@ -41,6 +43,11 @@ function BestPractices() {
       return axios.get('/logout');
   }
 
+  const handleSort = () => {
+    setSortRating(prev => prev === 'DESC' ? 'ASC' : 'DESC');
+    handleSearch();
+  }
+
   const handleLike = (id) => {
     axios.post(`/api/practices/${id}/rate`, id)
       .then(handleSearch);
@@ -50,7 +57,8 @@ function BestPractices() {
     const condition = {
       name: search,
       team: team === 'all' ? null : team,
-      category: category === 'all' ? null : team
+      category: category === 'all' ? null : team,
+      sortByRatingDirection: sortRating
     };
     axios.post('/api/practices/search', condition)
       .then(resp => setPractices(resp.data));
@@ -160,7 +168,12 @@ function BestPractices() {
                 <TableCell className="text-white">Наилучшие практики</TableCell>
                 <TableCell className="text-white">Категория</TableCell>
                 <TableCell className="text-white">Команда</TableCell>
-                <TableCell className="text-white">Количество голосов</TableCell>
+                <TableCell className="text-white">
+                  Количество голосов
+                  <IconButton onClick={handleSort}>
+                    <SortIcon className={sortRating === 'DESC' && "revert-180"}/>
+                  </IconButton>
+                </TableCell>
                 <TableCell className="text-white">Автор</TableCell>
                 <TableCell className="text-white">Голосовать</TableCell>
                 <TableCell className="text-white">Комментарии</TableCell>
