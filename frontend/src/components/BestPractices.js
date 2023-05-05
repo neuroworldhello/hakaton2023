@@ -15,19 +15,22 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import {PracticeDialog} from "./PracticeDialog";
+import { PracticeDialog } from "./PracticeDialog";
 import Add from '@mui/icons-material/Add';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import TextsmsIcon from '@mui/icons-material/Textsms';
 import ButtonComponent from "./Button";
 import axios from "axios";
 import { categories, teams } from "./consts";
-import {CommentsDialog} from "./CommentsDialog";
+import { CommentsDialog } from "./CommentsDialog";
+import SortIcon from '@mui/icons-material/Sort';
 
 function BestPractices() {
   const [category, setCategory] = React.useState('all');
   const [team, setTeam] = React.useState('all');
   const [search, setSearch] = React.useState('');
+  const [sortRating, setSortRating] = React.useState('DESC');
+  const [loading, setLoading] = React.useState(true);
   const [practiceDialogOpen, setPracticeDialogOpen] = useState(false);
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
   const [practices, setPractices] = React.useState([]);
@@ -38,7 +41,11 @@ function BestPractices() {
   }
 
   const handleExit = () => {
-      return axios.get('/logout');
+    return axios.get('/logout');
+  }
+
+  const handleSort = () => {
+    setSortRating(prev => prev === 'DESC' ? 'ASC' : 'DESC');
   }
 
   const handleLike = (id) => {
@@ -47,28 +54,42 @@ function BestPractices() {
   }
 
   const handleSearch = () => {
+    setLoading(true);
     const condition = {
       name: search,
       team: team === 'all' ? null : team,
-      category: category === 'all' ? null : team
+      category: category === 'all' ? null : category,
+      sortByRatingDirection: sortRating
     };
     axios.post('/api/practices/search', condition)
-      .then(resp => setPractices(resp.data));
+      .then(resp => setPractices(resp.data))
+      .then(() => setLoading(false));
   }
 
   useEffect(() => {
     axios.post('/api/practices/search', {})
-      .then(resp => setPractices(resp.data));
+      .then(resp => setPractices(resp.data))
+      .then(() => setLoading(false));
     axios.get('/username')
-      .then( resp => setUser(resp.data));
-  },[]);
+      .then(resp => setUser(resp.data));
+  }, []);
+
+  useEffect(() => {
+    handleSearch();
+  }, [sortRating]);
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  }
 
   return (
     <div className="bg-background-page ">
       <AppBar position="static" className="bg-page-header">
         <Toolbar>
           <Typography variant="h6" className="text-white" component="div" sx={{ flexGrow: 1 }}>
-            Наилучшие практики
+            Лучшие практики
           </Typography>
           <Typography variant="h6" className="text-white mr-16" component="div">
             Пользователь: {user}
@@ -97,6 +118,7 @@ function BestPractices() {
             margin="normal"
             value={search}
             className="m-0"
+            onKeyDown={handleKeyDown}
             onChange={(e) => setSearch(e.target.value)}
           />
         </Grid>
@@ -147,59 +169,66 @@ function BestPractices() {
             variant="contained"
             className="w-full h-full"
             onClick={handleSearch}
+            disabled={loading}
           >
             Поиск
           </ButtonComponent>
         </Grid>
       </Grid>
 
-          {/* Таблица */}
-          <Table className="bg-background-table mt-16">
-            <TableHead className="bg-table-header text-white">
-              <TableRow >
-                <TableCell className="text-white">Наилучшие практики</TableCell>
-                <TableCell className="text-white">Категория</TableCell>
-                <TableCell className="text-white">Команда</TableCell>
-                <TableCell className="text-white">Количество голосов</TableCell>
-                <TableCell className="text-white">Автор</TableCell>
-                <TableCell className="text-white">Голосовать</TableCell>
-                <TableCell className="text-white">Комментарии</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {practices.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>
-                    <a href={item.documentLink} target="_blank" rel="noreferrer" className="text-black">
-                      {item.name}
-                    </a>
-                  </TableCell>
-                  <TableCell>{item.category}</TableCell>
-                  <TableCell>{item.team}</TableCell>
-                  <TableCell>{item.rating}</TableCell>
-                  <TableCell>{item.author}</TableCell>
-                  <TableCell>
-                    <IconButton aria-label="upload picture"
-                                className="text-button disabled:text-body-font"
-                                disabled={item.isAlreadyVoted}
-                                onClick={() => handleLike(item.id)}>
-                      <ThumbUpIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell>
-                    <IconButton
-                        aria-label="comment button"
-                        className="text-button"
-                        onClick={() => setCommentDialogOpen(true)}
-                    >
-                      <TextsmsIcon/>
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-      <PracticeDialog dialogOpen={practiceDialogOpen} setDialogOpen={setPracticeDialogOpen} handleSearch={handleSearch} />
+      {/* Таблица */}
+      <Table className="bg-background-table mt-16">
+        <TableHead className="bg-table-header text-white">
+          <TableRow>
+            <TableCell className="text-white">Наилучшие практики</TableCell>
+            <TableCell className="text-white">Категория</TableCell>
+            <TableCell className="text-white">Команда</TableCell>
+            <TableCell className="text-white flex">
+              Количество голосов
+              <IconButton onClick={handleSort} disabled={loading}>
+                <SortIcon className={sortRating === 'ASC' && "revert-180"} />
+              </IconButton>
+            </TableCell>
+            <TableCell className="text-white">Автор</TableCell>
+            <TableCell className="text-white">Голосовать</TableCell>
+            <TableCell className="text-white">Комментарии</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {practices.map((item) => (
+            <TableRow key={item.id}>
+              <TableCell>
+                <a href={item.documentLink} target="_blank" rel="noreferrer" className="text-black">
+                  {item.name}
+                </a>
+              </TableCell>
+              <TableCell>{item.category}</TableCell>
+              <TableCell>{item.team}</TableCell>
+              <TableCell>{item.rating}</TableCell>
+              <TableCell>{item.author}</TableCell>
+              <TableCell>
+                <IconButton aria-label="upload picture"
+                            className="text-button disabled:text-body-font"
+                            disabled={item.isAlreadyVoted}
+                            onClick={() => handleLike(item.id)}>
+                  <ThumbUpIcon />
+                </IconButton>
+              </TableCell>
+              <TableCell>
+                <IconButton
+                  aria-label="comment button"
+                  className="text-button"
+                  onClick={() => setCommentDialogOpen(true)}
+                >
+                  <TextsmsIcon />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <PracticeDialog dialogOpen={practiceDialogOpen} setDialogOpen={setPracticeDialogOpen}
+                      handleSearch={handleSearch} />
       <CommentsDialog dialogOpen={commentDialogOpen} setDialogOpen={setCommentDialogOpen} />
     </div>
   );
