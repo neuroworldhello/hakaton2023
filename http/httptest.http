@@ -2,8 +2,11 @@ POST http://localhost:8080/api/practices/search
 Content-Type: application/json
 
 {
-  "name": "name",
-  "author": "le2"
+  "author": "Коллективный разум",
+  "name": "Генерация т",
+  "sortByRatingDirection": "ASC",
+  "pageSize": 3,
+  "pageNumber": 1
 }
 
 ###
@@ -15,7 +18,8 @@ Content-Type: application/json
   "name": "name",
   "author": "name",
   "category": "cat name",
-  "team": "team"
+  "team": "team",
+  "sortByRatingDirection": "ASC"
 }
 
 ###
