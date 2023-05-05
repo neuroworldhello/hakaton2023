@@ -65,7 +65,7 @@ function BestPractices() {
   }
 
   const handleLike = (id) => {
-    axios.post(`http://localhost:8080/api/practices/${id}/rate`, id);
+    axios.post(`/api/practices/${id}/rate`, id);
   }
 
   const handleSearch = () => {
@@ -74,7 +74,7 @@ function BestPractices() {
       team: team === 'all' ? null : team,
       category: category === 'all' ? null : team
     };
-    axios.post('http://localhost:8080/api/practices/search', condition);
+    axios.post('/api/practices/search', condition);
   }
 
   useEffect(() => {

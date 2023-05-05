@@ -1,6 +1,9 @@
 import React, {useState} from "react";
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import {AddPracticeDialogContent} from "./AddPracticeDialogContent";
+import {toastOptions} from "./consts";
+import {toast} from "react-toastify";
+import Button from "./Button";
 import axios from "axios";
 
 export function PracticeDialog({dialogOpen, setDialogOpen}) {
@@ -13,20 +16,10 @@ export function PracticeDialog({dialogOpen, setDialogOpen}) {
     const handleSaveButtonClick = () => {
         setDialogOpen(false);
 
-        const requestOptions = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(practice)
-        };
-
-        fetch("/api/practices", requestOptions)
-            .then(response => console.log(response.data))
-            .catch(error => console.log(error))
-        //
-        // axios.post("/api/practice", practice)
-        //     .then(response => console.log(response.data))
-        //     .catch(error => console.log(error))
-        console.log(practice)
+        axios.post("/api/practices", practice)
+            .then(() => toast('Практика ' + practice.name + ' сохранена', toastOptions))
+            .catch(() => toast.error('Ошибка сохранения практики', toastOptions));
+        setPractice({})
     }
 
     return (
@@ -37,13 +30,18 @@ export function PracticeDialog({dialogOpen, setDialogOpen}) {
             fullWidth={true}
         >
             <DialogTitle>Добавление практики</DialogTitle>
-            <DialogContent>
+            <DialogContent className='pb-0'>
                 <DialogContentText>
                     <AddPracticeDialogContent practice={practice} setPractice={setPractice}/>
                 </DialogContentText>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={handleSaveButtonClick}>Добавить</Button>
+            <DialogActions className='pr-20'>
+                <Button
+                    onClick={handleSaveButtonClick}
+                    disabled={!practice.name || !practice.team || !practice.category || !practice.documentLink}
+                >
+                    Добавить
+                </Button>
             </DialogActions>
         </Dialog>
     )

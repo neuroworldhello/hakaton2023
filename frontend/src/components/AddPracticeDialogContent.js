@@ -3,8 +3,8 @@ import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/mater
 import {categories, teams} from "./consts";
 
 export function AddPracticeDialogContent({practice, setPractice}) {
-    const categoryOptions = categories.map(option => <MenuItem value={option}>{option}</MenuItem>);
-    const teamOptions = teams.map(option => <MenuItem value={option}>{option}</MenuItem>);
+    const categoryOptions = categories.map(option => <MenuItem key={option} value={option}>{option}</MenuItem>);
+    const teamOptions = teams.map(option => <MenuItem key={option} value={option}>{option}</MenuItem>);
 
     const handleNameChange = (event) => {
         setPractice({
