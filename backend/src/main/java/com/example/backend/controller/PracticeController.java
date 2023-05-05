@@ -28,7 +28,7 @@ public class PracticeController {
     }
 
     @PostMapping("/search")
-    public List<Practice> findPractices(@RequestBody PracticeSearchCriteria searchCriteria) {
+    public List<PracticeDto> searchPractices(@RequestBody PracticeSearchCriteria searchCriteria) {
         return practiceService.searchPractices(searchCriteria);
     }
 

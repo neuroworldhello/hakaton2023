@@ -39,7 +39,7 @@ public class PracticeServiceImpl implements PracticeService {
     }
 
     @Override
-    public List<Practice> searchPractices(PracticeSearchCriteria searchCriteria) {
+    public List<PracticeDto> searchPractices(PracticeSearchCriteria searchCriteria) {
         Specification<Practice> spec = Specification.where(null);
 
         if (searchCriteria.getAuthor() != null) {
@@ -60,7 +60,8 @@ public class PracticeServiceImpl implements PracticeService {
 
         Sort sort = Sort.by(searchCriteria.getSortByRatingDirection(), "rating");
 
-        return practiceRepository.findAll(spec, sort);
+        return practiceRepository.findAll(spec, sort).stream()
+                .map(practiceConverterService::toDto).toList();
     }
 
     @Override

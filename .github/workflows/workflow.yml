@@ -9,13 +9,39 @@ on:
 # Определяем переменные окружения
 env:
   DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-  DOCKERHUB_REPOSITORY: dronotte
+  DOCKERHUB_REPOSITORY: ${{ secrets.DOCKERHUB_USERNAME }}
   IMAGE_TAG: ${{ github.sha }}
   VM_HOST_IP: 158.160.12.108
 
 jobs:
-  build:
+  check-changes:
     runs-on: ubuntu-latest
+    outputs:
+      backend_changed: ${{ steps.changes.outputs.backend }}
+      frontend_changed: ${{ steps.changes.outputs.frontend }}
+      nginx_changed: ${{ steps.changes.outputs.nginx }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+            frontend:
+              - 'frontend/**'
+            nginx:
+              - 'nginx.conf'
+      - name: print debug
+        run: |
+          echo ${{ steps.changes.outputs.backend }}
+          echo ${{ steps.changes.outputs.frontend }}
+  build-backend:
+    runs-on: ubuntu-latest
+    needs:
+      - check-changes
+    if: needs.check-changes.outputs.backend_changed == 'true'
     services:
       postgres:
         image: postgres:12-alpine
@@ -45,6 +71,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Build and test backend
+        timeout-minutes: 10
         run: |
           cd backend
           ./gradlew clean build test
@@ -56,11 +83,6 @@ jobs:
           SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: true
           SPRING_JPA_SHOW_SQL: true
 
-      - name: Build frontend
-        run: |
-          cd frontend
-          npm install
-          CI=false npm run build
 
       - name: Login to Docker Hub
         uses: docker/login-action@v1
@@ -77,6 +99,37 @@ jobs:
             ${{ env.DOCKERHUB_REPOSITORY }}/backend:${{ env.IMAGE_TAG }}
             ${{ env.DOCKERHUB_REPOSITORY }}/backend:latest
 
+      # Notify build that backend was modifed
+      - name: Set variable
+        run: echo "true" > backend_modifed
+
+      - name: Create artifact with variable
+        uses: actions/upload-artifact@v2
+        with:
+          name: backend_modifed
+          path: backend_modifed
+  build-frontend:
+    runs-on: ubuntu-latest
+    needs:
+      - check-changes
+    if: needs.check-changes.outputs.frontend_changed == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build frontend
+#        timeout-minutes: 10
+        run: |
+          cd frontend
+          npm install
+          CI=false npm run build
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
       - name: Build frontend Docker image
         uses: docker/build-push-action@v2
         with:
@@ -85,12 +138,30 @@ jobs:
           tags: |
             ${{ env.DOCKERHUB_REPOSITORY }}/frontend:${{ env.IMAGE_TAG }}
             ${{ env.DOCKERHUB_REPOSITORY }}/frontend:latest
+
+      # Notify build that frontend was modifed
+      - name: Set variable
+        run: echo "true" > frontend_modifed
+
+      - name: Create artifact with variable
+        uses: actions/upload-artifact@v2
+        with:
+          name: frontend_modifed
+          path: frontend_modifed
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+    needs:
+      - build-frontend
+      - build-backend
+      - check-changes
+    if: always()
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+      - name: print debug
+        run: |
+          echo ${{ needs.check-changes.outputs.backend_changed }}
+          echo ${{ needs.check-changes.outputs.backend_changed }}
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -100,15 +171,49 @@ jobs:
           if_key_exists: replace # replace / ignore / fail; optional (defaults to fail)
       - name: Set up SSH key
         run: ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
-      - name: Create .env file
-        run: envsubst < .env.tpl > .env
       - name: Create docker-compose file
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_USER }}
         run: envsubst < docker-compose.yml.tpl > docker-compose.yml
       - name: Copy files to remote server
         run: |
-          scp -o StrictHostKeyChecking=no -r docker-compose.yml .env nginx.conf ubuntu@${VM_HOST_IP}:~
+          scp -o StrictHostKeyChecking=no -r docker-compose.yml nginx.conf ubuntu@${VM_HOST_IP}:~
+      - name: Prune docker unused resources
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${VM_HOST_IP} << EOF
+            sudo docker system prune -af
+          EOF
       - name: Start services
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${VM_HOST_IP} << EOF
             sudo docker-compose up -d
+          EOF
+
+      - name: Restart backend if modifed
+        if: needs.check-changes.outputs.backend_changed == 'true'
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${VM_HOST_IP} << EOF
+            sudo docker-compose up --force-recreate -d backend
+          EOF
+
+      - name: Restart frontend if modifed
+        if: needs.check-changes.outputs.frontend_changed == 'true'
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${VM_HOST_IP} << EOF
+            sudo docker-compose up --force-recreate -d frontend
+          EOF
+
+      - name: Restart nginx if modifed
+        if: needs.check-changes.outputs.nginx_changed == 'true'
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${VM_HOST_IP} << EOF
+            sudo docker-compose up --force-recreate -d nginx
+          EOF
+
+      - name: Prune docker unused resources
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${VM_HOST_IP} << EOF
+            sudo docker system prune -af
           EOF

@@ -1,5 +1,5 @@
-# Устанавливаем базовый образ с JDK 11
-FROM adoptopenjdk/openjdk11:jdk-11.0.11_9-alpine
+# Устанавливаем базовый образ с JDK 17
+FROM openjdk:17-jdk-bullseye
 
 # Устанавливаем рабочую директорию
 WORKDIR /app

@@ -1,5 +1,6 @@
 package com.example.backend.service.impl;
 
+import com.example.backend.converter.PracticeConverterService;
 import com.example.backend.domain.Author;
 import com.example.backend.domain.Category;
 import com.example.backend.domain.Practice;
@@ -44,6 +45,9 @@ class PracticeServiceImplTest {
 
     @Autowired
     private AuthorRepository authorRepository;
+
+    @Autowired
+    PracticeConverterService practiceConverterService;
 
     private static PostgreSQLContainer<?> postgreSQLContainer;
 
@@ -132,7 +136,8 @@ class PracticeServiceImplTest {
         searchCriteria.setSortByRatingDirection(Sort.Direction.ASC);
 
         // when
-        List<Practice> result = practiceService.searchPractices(searchCriteria);
+        List<Practice> result = practiceService.searchPractices(searchCriteria).stream()
+                .map(p -> practiceConverterService.toEntity(p)).toList();
 
         // then
         assertEquals(1, result.size());
