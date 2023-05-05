@@ -23,16 +23,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-#      - uses: dorny/paths-filter@v2
-#        id: changes
-#        with:
-#          filters: |
-#            backend:
-#              - 'backend/**'
-#            frontend:
-#              - 'frontend/**'
-#            nginx:
-#              - 'nginx.conf'
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+            frontend:
+              - 'frontend/**'
+            nginx:
+              - 'nginx.conf'
       - name: print debug
         run: |
           echo ${{ steps.changes.outputs.backend }}
