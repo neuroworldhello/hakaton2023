@@ -10,6 +10,7 @@ import com.example.backend.service.CommentService;
 import com.example.backend.service.PracticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class PracticeController {
     }
 
     @GetMapping("/{id}/comments")
+    @Transactional(readOnly = true)
     public List<CommentDto> getCommentsByPracticeId(@PathVariable Long id) {
         List<Comment> comments = commentService.getCommentsByPracticeId(id);
         return commentConverterService.convertToDtoList(comments);
