@@ -36,7 +36,7 @@ export function PracticeDialog({dialogOpen, setDialogOpen, handleSearch}) {
                     <AddPracticeDialogContent practice={practice} setPractice={setPractice}/>
                 </DialogContentText>
             </DialogContent>
-            <DialogActions className='pr-20 pb-10'>
+            <DialogActions className='pr-20 py-10'>
                 <Button
                     onClick={handleSaveButtonClick}
                     disabled={!practice.name || !practice.team || !practice.category || !practice.documentLink}
