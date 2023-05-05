@@ -19,6 +19,7 @@ jobs:
     outputs:
       backend_changed: ${{ steps.changes.outputs.backend }}
       frontend_changed: ${{ steps.changes.outputs.frontend }}
+      nginx_changed: ${{ steps.changes.outputs.nginx }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -30,6 +31,8 @@ jobs:
               - 'backend/**'
             frontend:
               - 'frontend/**'
+            nginx:
+              - 'nginx.conf'
       - name: print debug
         run: |
           echo ${{ steps.changes.outputs.backend }}
@@ -200,6 +203,13 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${VM_HOST_IP} << EOF
             sudo docker-compose up --force-recreate -d frontend
+          EOF
+
+      - name: Restart nginx if modifed
+        if: needs.check-changes.outputs.nginx_changed == 'true'
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${VM_HOST_IP} << EOF
+            sudo docker-compose up --force-recreate -d nginx
           EOF
 
       - name: Prune docker unused resources
