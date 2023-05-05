@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {Dialog, DialogContent, DialogContentText, DialogTitle, TableCell, TextField, Typography} from "@mui/material";
 import Button from "./Button";
 import axios from "axios";
@@ -21,22 +21,22 @@ export function CommentsDialog({dialogOpen, setDialogOpen, practiceId}) {
         }
     }, [practiceId, dialogOpen])
 
-    const handleDialogClose = () => {
+    const handleDialogClose = useCallback(() => {
         setDialogOpen(false);
-    }
+    }, []);
 
-    const handleSaveButtonClick = () => {
+    const handleSaveButtonClick = useCallback(() => {
         axios.post(`/api/practices/${practiceId}/comments?text=${comment}`)
-            .then(() => toast('Комментарий добавлен', toastOptions))
-            .catch(() => toast.error('Ошибка добавления комментария', toastOptions))
+          .then(() => toast('Комментарий добавлен', toastOptions))
+          .catch(() => toast.error('Ошибка добавления комментария', toastOptions))
 
         setDialogOpen(false);
         setComment('');
-    }
+    }, [practiceId, comment]);
 
-    const handleCommentChange = (event) => {
+    const handleCommentChange = useCallback((event) => {
         setComment(event.target.value);
-    }
+    }, []);
 
     return (
         <Dialog

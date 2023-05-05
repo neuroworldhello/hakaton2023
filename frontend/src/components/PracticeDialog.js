@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useCallback, useState } from "react";
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import {AddPracticeDialogContent} from "./AddPracticeDialogContent";
 import {toastOptions} from "./consts";
@@ -9,11 +9,11 @@ import axios from "axios";
 export function PracticeDialog({dialogOpen, setDialogOpen, handleSearch}) {
     const [practice, setPractice] = useState({});
 
-    const handleDialogClose = () => {
+    const handleDialogClose = useCallback(() => {
         setDialogOpen(false);
-    }
+    }, [setDialogOpen]);
 
-    const handleSaveButtonClick = () => {
+    const handleSaveButtonClick = useCallback(() => {
         setDialogOpen(false);
 
         axios.post("/api/practices", practice)
@@ -21,7 +21,7 @@ export function PracticeDialog({dialogOpen, setDialogOpen, handleSearch}) {
             .then(handleSearch)
             .catch(() => toast.error('Ошибка сохранения практики', toastOptions));
         setPractice({})
-    }
+    }, [practice, setDialogOpen, handleSearch]);
 
     return (
         <Dialog
