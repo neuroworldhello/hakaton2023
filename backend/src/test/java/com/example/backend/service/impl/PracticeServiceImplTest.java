@@ -7,10 +7,8 @@ import com.example.backend.domain.Practice;
 import com.example.backend.domain.Team;
 import com.example.backend.dto.PracticeDto;
 import com.example.backend.dto.PracticeSearchCriteria;
-import com.example.backend.repository.AuthorRepository;
-import com.example.backend.repository.CategoryRepository;
-import com.example.backend.repository.PracticeRepository;
-import com.example.backend.repository.TeamRepository;
+import com.example.backend.repository.*;
+import com.example.backend.service.Authorisation;
 import com.example.backend.service.PracticeService;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterAll;
@@ -19,6 +17,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.Sort;
 import org.testcontainers.containers.PostgreSQLContainer;
 
@@ -28,6 +28,7 @@ import java.util.Optional;
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class PracticeServiceImplTest {
@@ -48,6 +49,9 @@ class PracticeServiceImplTest {
 
     @Autowired
     PracticeConverterService practiceConverterService;
+
+    @MockBean
+    Authorisation authorisation;
 
     private static PostgreSQLContainer<?> postgreSQLContainer;
 
@@ -83,6 +87,7 @@ class PracticeServiceImplTest {
     @Test
     public void testSavePractice() {
         PracticeDto practice = createPractice();
+        when(authorisation.getUserName()).thenReturn(practice.getAuthor());
         PracticeDto savedPractice = practiceService.savePractice(practice, practice.getAuthor());
         assertNotNull(savedPractice.getId());
     }
@@ -90,6 +95,7 @@ class PracticeServiceImplTest {
     @Test
     public void testGetPracticeById() {
         PracticeDto practice = createPractice();
+        when(authorisation.getUserName()).thenReturn(practice.getAuthor());
         PracticeDto practiceDto = practiceService.savePractice(practice, practice.getAuthor());
         Practice retrievedPractice = practiceService.getPracticeById(practiceDto.getId());
         assertNotNull(retrievedPractice);
@@ -130,6 +136,8 @@ class PracticeServiceImplTest {
                 .team(team)
                 .build();
         practiceRepository.saveAll(List.of(practice1, practice2, practice3));
+        when(authorisation.getUserName()).thenReturn(practice2.getAuthor().getName());
+
 
         PracticeSearchCriteria searchCriteria = new PracticeSearchCriteria();
         searchCriteria.setName("Practice 2");
@@ -157,6 +165,8 @@ class PracticeServiceImplTest {
                 .team(getTeam())
                 .build();
         practice = practiceRepository.save(practice);
+        when(authorisation.getUserName()).thenReturn(practice.getAuthor().getName());
+
 
         // Вызываем метод ratePractice для тестовой практики
         Practice ratedPractice = practiceService.ratePractice(practice.getId());
