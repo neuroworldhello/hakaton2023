@@ -35,6 +35,7 @@ function BestPractices() {
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
   const [practices, setPractices] = React.useState([]);
   const [user, setUser] = React.useState('');
+  const [practiceId, setPracticeId] = useState();
 
   const handlePracticeDialogOpen = () => {
     setPracticeDialogOpen(true);
@@ -52,6 +53,11 @@ function BestPractices() {
   const handleLike = (id) => {
     axios.post(`/api/practices/${id}/rate`, id)
       .then(handleSearch);
+  }
+
+  const handleOpenCommentDialog = (practiceId) => {
+    setPracticeId(practiceId);
+    setCommentDialogOpen(true);
   }
 
   const handleSearch = () => {
@@ -219,7 +225,7 @@ function BestPractices() {
                 <IconButton
                   aria-label="comment button"
                   className="text-button"
-                  onClick={() => setCommentDialogOpen(true)}
+                  onClick={() => handleOpenCommentDialog(item.id)}
                 >
                   <TextsmsIcon />
                 </IconButton>
@@ -230,7 +236,7 @@ function BestPractices() {
       </Table>
       <PracticeDialog dialogOpen={practiceDialogOpen} setDialogOpen={setPracticeDialogOpen}
                       handleSearch={handleSearch} />
-      <CommentsDialog dialogOpen={commentDialogOpen} setDialogOpen={setCommentDialogOpen} />
+      <CommentsDialog dialogOpen={commentDialogOpen} setDialogOpen={setCommentDialogOpen} practiceId={practiceId}/>
     </div>
   );
 }
