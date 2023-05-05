@@ -7,6 +7,7 @@ import com.example.backend.dto.PracticeSearchCriteria;
 import com.example.backend.repository.PracticeRepository;
 import com.example.backend.service.PracticeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -59,8 +60,9 @@ public class PracticeServiceImpl implements PracticeService {
         }
 
         Sort sort = Sort.by(searchCriteria.getSortByRatingDirection(), "rating");
+        PageRequest pageRequest = PageRequest.of(searchCriteria.getPageNumber(), searchCriteria.getPageSize(), sort);
 
-        return practiceRepository.findAll(spec, sort).stream()
+        return practiceRepository.findAll(spec, pageRequest).stream()
                 .map(practiceConverterService::toDto).toList();
     }
 
