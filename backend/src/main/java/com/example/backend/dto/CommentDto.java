@@ -13,7 +13,7 @@ public class CommentDto {
     private Long id;
     private String text;
 
-    private AuthorDto author;
+    private String author;
 
     private LocalDateTime createdAt;
 }

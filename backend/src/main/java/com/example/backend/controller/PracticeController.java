@@ -45,7 +45,6 @@ public class PracticeController {
     }
 
     @GetMapping("/{id}/comments")
-    @Transactional(readOnly = true)
     public List<CommentDto> getCommentsByPracticeId(@PathVariable Long id) {
         List<Comment> comments = commentService.getCommentsByPracticeId(id);
         return commentConverterService.convertToDtoList(comments);
