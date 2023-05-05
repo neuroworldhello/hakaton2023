@@ -81,11 +81,6 @@ public class PracticeServiceImpl implements PracticeService {
         practice.setRating(practice.getRating() + 1);
 
         Author author = authorRepository.findByName(authorisation.getUserName()).orElse(null);
-        if (author == null){
-            author = authorRepository.save(Author.builder()
-                    .name(authorisation.getUserName())
-            .build());
-        }
 
 
         voteRepository.save(Vote.builder()

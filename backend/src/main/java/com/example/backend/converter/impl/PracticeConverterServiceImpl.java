@@ -53,11 +53,6 @@ public class PracticeConverterServiceImpl implements PracticeConverterService {
     public PracticeDto toDto(Practice practice) {
 
         Author author = authorRepository.findByName(authorisation.getUserName()).orElse(null);
-        if (author == null){
-            author = authorRepository.save(Author.builder()
-                    .name(authorisation.getUserName())
-                    .build());
-        }
 
         return PracticeDto.builder()
                 .id(practice.getId())
