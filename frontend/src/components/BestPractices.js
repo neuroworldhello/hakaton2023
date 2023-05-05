@@ -41,7 +41,8 @@ function BestPractices() {
   }
 
   const handleExit = () => {
-    return axios.get('/logout');
+    return axios.get('/logout')
+                .then(window.location.href = '/login.html');
   }
 
   const handleSort = () => {
