@@ -52,4 +52,4 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - /etc/letsencrypt:/etc/letsencrypt
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./error.html:/var/www/html/error.html
+      - ./error.html:/etc/nginx/html/error.html
