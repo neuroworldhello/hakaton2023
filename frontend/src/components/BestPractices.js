@@ -78,6 +78,12 @@ function BestPractices() {
     handleSearch();
   }, [sortRating]);
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  }
+
   return (
     <div className="bg-background-page ">
       <AppBar position="static" className="bg-page-header">
@@ -112,6 +118,7 @@ function BestPractices() {
             margin="normal"
             value={search}
             className="m-0"
+            onKeyDown={handleKeyDown}
             onChange={(e) => setSearch(e.target.value)}
           />
         </Grid>
