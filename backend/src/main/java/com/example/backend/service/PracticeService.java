@@ -13,7 +13,7 @@ public interface PracticeService {
 
     Practice getPracticeById(Long id);
 
-    List<Practice> searchPractices(PracticeSearchCriteria searchCriteria);
+    List<PracticeDto> searchPractices(PracticeSearchCriteria searchCriteria);
 
     Practice ratePractice(Long id);
 }
