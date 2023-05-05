@@ -1,12 +1,15 @@
 package com.example.backend.service.impl;
 
 import com.example.backend.converter.PracticeConverterService;
+import com.example.backend.domain.Author;
 import com.example.backend.domain.Practice;
 import com.example.backend.domain.Vote;
 import com.example.backend.dto.PracticeDto;
 import com.example.backend.dto.PracticeSearchCriteria;
+import com.example.backend.repository.AuthorRepository;
 import com.example.backend.repository.PracticeRepository;
 import com.example.backend.repository.VoteRepository;
+import com.example.backend.service.Authorisation;
 import com.example.backend.service.PracticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -26,6 +29,8 @@ public class PracticeServiceImpl implements PracticeService {
     private final PracticeRepository practiceRepository;
     private final PracticeConverterService practiceConverterService;
     private final VoteRepository voteRepository;
+    private final Authorisation authorisation;
+    private final AuthorRepository authorRepository;
 
     public PracticeDto savePractice(PracticeDto practiceDto, String author) {
         practiceDto.setAuthor(author);
@@ -74,9 +79,18 @@ public class PracticeServiceImpl implements PracticeService {
                         new NoSuchElementException("Practice not found with id: " + id));
 
         practice.setRating(practice.getRating() + 1);
+
+        Author author = authorRepository.findByName(authorisation.getUserName()).orElse(null);
+        if (author == null){
+            author = authorRepository.save(Author.builder()
+                    .name(authorisation.getUserName())
+            .build());
+        }
+
+
         voteRepository.save(Vote.builder()
                         .practiceId(practice.getId())
-                        .authorId(practice.getAuthor().getId())
+                        .authorId(author.getId())
                 .build());
         return practiceRepository.save(practice);
     }
