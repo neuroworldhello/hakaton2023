@@ -83,7 +83,7 @@ function BestPractices() {
 
   useEffect(() => {
     handleSearch();
-  }, [sortRating]);
+  }, [sortRating, handleSearch]);
 
   const handleKeyDown = useCallback((event) => {
     if (event.key === 'Enter') {

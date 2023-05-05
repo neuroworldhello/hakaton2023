@@ -23,7 +23,7 @@ export function CommentsDialog({dialogOpen, setDialogOpen, practiceId}) {
 
     const handleDialogClose = useCallback(() => {
         setDialogOpen(false);
-    }, []);
+    }, [setDialogOpen]);
 
     const handleSaveButtonClick = useCallback(() => {
         axios.post(`/api/practices/${practiceId}/comments?text=${comment}`)
@@ -32,7 +32,7 @@ export function CommentsDialog({dialogOpen, setDialogOpen, practiceId}) {
 
         setDialogOpen(false);
         setComment('');
-    }, [practiceId, comment]);
+    }, [practiceId, comment, setDialogOpen]);
 
     const handleCommentChange = useCallback((event) => {
         setComment(event.target.value);

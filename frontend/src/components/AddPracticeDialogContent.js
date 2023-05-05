@@ -11,28 +11,28 @@ export function AddPracticeDialogContent({practice, setPractice}) {
             ...prevState,
             name: event.target.value
         }));
-    }, []);
+    }, [setPractice]);
 
     const handleCategoryChange = useCallback((event) => {
         setPractice(prevState => ({
             ...prevState,
             category: event.target.value
         }));
-    }, []);
+    }, [setPractice]);
 
     const handleTeamChange = useCallback((event) => {
         setPractice(prevState => ({
             ...prevState,
             team: event.target.value
         }));
-    }, []);
+    }, [setPractice]);
 
     const handleLinkChange = useCallback((event) => {
         setPractice(prevState => ({
             ...prevState,
             documentLink: event.target.value
         }));
-    }, []);
+    }, [setPractice]);
 
     return (
         <div className='mt-4 w-full'>
