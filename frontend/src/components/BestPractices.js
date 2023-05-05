@@ -37,6 +37,9 @@ function BestPractices() {
   const [practices, setPractices] = React.useState([]);
   const [user, setUser] = React.useState('');
   const [practiceId, setPracticeId] = useState();
+  const [pageSize, setPageSize] = useState(10);
+  const [totalElements, setTotalElements] = useState(0);
+  const [pageNumber, setPageNumber] = useState(0);
 
   const handlePracticeDialogOpen = useCallback(() => {
     setPracticeDialogOpen(true);
