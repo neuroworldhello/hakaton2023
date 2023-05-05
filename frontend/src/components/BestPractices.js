@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   AppBar,
   Grid,
@@ -13,7 +13,7 @@ import {
   FormControl, InputLabel, IconButton,
   TextField,
   Toolbar,
-  Typography,
+  Typography, Tooltip,
 } from '@mui/material';
 import { PracticeDialog } from "./PracticeDialog";
 import Add from '@mui/icons-material/Add';
@@ -37,30 +37,25 @@ function BestPractices() {
   const [user, setUser] = React.useState('');
   const [practiceId, setPracticeId] = useState();
 
-  const handlePracticeDialogOpen = () => {
+  const handlePracticeDialogOpen = useCallback(() => {
     setPracticeDialogOpen(true);
-  }
+  }, []);
 
-  const handleExit = () => {
+  const handleExit = useCallback(() => {
     return axios.get('/logout')
-                .then(window.location.href = '/login.html');
-  }
+      .then(window.location.href = '/login.html');
+  }, []);
 
-  const handleSort = () => {
+  const handleSort = useCallback(() => {
     setSortRating(prev => prev === 'DESC' ? 'ASC' : 'DESC');
-  }
+  }, []);
 
-  const handleLike = (id) => {
-    axios.post(`/api/practices/${id}/rate`, id)
-      .then(handleSearch);
-  }
-
-  const handleOpenCommentDialog = (practiceId) => {
+  const handleOpenCommentDialog = useCallback((practiceId) => {
     setPracticeId(practiceId);
     setCommentDialogOpen(true);
-  }
+  }, []);
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     setLoading(true);
     const condition = {
       name: search,
@@ -71,7 +66,7 @@ function BestPractices() {
     axios.post('/api/practices/search', condition)
       .then(resp => setPractices(resp.data))
       .then(() => setLoading(false));
-  }
+  }, [search, team, category, sortRating]);
 
   useEffect(() => {
     axios.post('/api/practices/search', {})
@@ -81,15 +76,20 @@ function BestPractices() {
       .then(resp => setUser(resp.data));
   }, []);
 
+  const handleLike = useCallback((id) => {
+    axios.post(`/api/practices/${id}/rate`, id)
+      .then(handleSearch);
+  }, [handleSearch]);
+
   useEffect(() => {
     handleSearch();
   }, [sortRating]);
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = useCallback((event) => {
     if (event.key === 'Enter') {
       handleSearch();
     }
-  }
+  }, [handleSearch]);
 
   return (
     <div className="bg-background-page ">
@@ -187,18 +187,20 @@ function BestPractices() {
       <Table className="bg-background-table mt-16">
         <TableHead className="bg-table-header text-white">
           <TableRow>
-            <TableCell className="text-white">Наилучшие практики</TableCell>
-            <TableCell className="text-white">Категория</TableCell>
-            <TableCell className="text-white">Команда</TableCell>
-            <TableCell className="text-white flex items-center">
-              Количество голосов
-              <IconButton onClick={handleSort} disabled={loading}>
-                <SortIcon className={` text-button-text ${sortRating === 'ASC' && "revert-180"}`} />
-              </IconButton>
+            <TableCell className="text-white" width='50%'>Наилучшие практики</TableCell>
+            <TableCell className="text-white " width='9%'>Категория</TableCell>
+            <TableCell className="text-white " width='9%'>Команда</TableCell>
+            <TableCell width='9%'>
+              <div className="text-white flex items-center">
+                Количество голосов
+                <IconButton onClick={handleSort} disabled={loading}>
+                  <SortIcon className={` text-button-text ${sortRating === 'ASC' && "revert-180"}`} />
+                </IconButton>
+              </div>
             </TableCell>
-            <TableCell className="text-white">Автор</TableCell>
-            <TableCell className="text-white">Голосовать</TableCell>
-            <TableCell className="text-white">Комментарии</TableCell>
+            <TableCell className="text-white " width='9%'>Автор</TableCell>
+            <TableCell className="text-white " width='7%'>Голосовать</TableCell>
+            <TableCell className="text-white " width='7%'>Комментарии</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -214,12 +216,16 @@ function BestPractices() {
               <TableCell>{item.rating}</TableCell>
               <TableCell>{item.author}</TableCell>
               <TableCell>
-                <IconButton aria-label="upload picture"
-                            className="text-button disabled:text-body-font"
-                            disabled={item.isAlreadyVoted}
-                            onClick={() => handleLike(item.id)}>
-                  <ThumbUpIcon />
-                </IconButton>
+                <Tooltip title={item.isAlreadyVoted && 'Вы уже проголосовали за эту практику'}>
+                  <span>
+                    <IconButton aria-label="upload picture"
+                                className="text-button disabled:text-body-font"
+                                disabled={item.isAlreadyVoted}
+                                onClick={() => handleLike(item.id)}>
+                      <ThumbUpIcon />
+                    </IconButton>
+                  </span>
+                </Tooltip>
               </TableCell>
               <TableCell>
                 <IconButton

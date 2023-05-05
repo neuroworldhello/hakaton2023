@@ -222,6 +222,14 @@ body :is(.w-full) {
   width: 100%
 }
 
+body :is(.min-w-136) {
+  min-width: 13.6rem
+}
+
+body :is(.flex-row) {
+  flex-direction: row
+}
+
 body :is(.items-center) {
   align-items: center
 }
@@ -301,6 +309,14 @@ body :is(.pr-20) {
 
 body :is(.pt-6) {
   padding-top: 0.6rem
+}
+
+body :is(.pr-6) {
+  padding-right: 0.6rem
+}
+
+body :is(.pt-1) {
+  padding-top: 0.25rem
 }
 
 body :is(.font-bold) {
