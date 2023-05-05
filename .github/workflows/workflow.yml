@@ -70,12 +70,13 @@ jobs:
 
       - name: Copy frontend artifact to backend
         run: |
-          rsync -av --delete frontend/build/ backend/src/main/resources/static/
+          rsync -av --delete frontend/build/* backend/src/main/resources/static/
+
       - name: Check copied frontend artifact
         run: |
           find backend/src/main/resources/static/
-      - name: Change permissions for gradlew
-        run: chmod +x backend/gradlew
+#      - name: Change permissions for gradlew
+#        run: chmod +x backend/gradlew
 
       - name: Set up Java 17
         uses: actions/setup-java@v2
