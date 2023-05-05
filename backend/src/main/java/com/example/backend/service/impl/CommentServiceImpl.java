@@ -7,6 +7,7 @@ import com.example.backend.repository.CommentRepository;
 import com.example.backend.repository.PracticeRepository;
 import com.example.backend.service.Authorisation;
 import com.example.backend.service.CommentService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,24 +31,30 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getCommentsByPracticeId(Long practiceId) {
-        return commentRepository.findByPracticeId(practiceId);
+    public List<Comment> getCommentsForPractice(Long practiceId) {
+        // получаем список комментариев для практики с указанным идентификатором,
+        // сортированный по дате добавления в порядке убывания
+        return commentRepository.findByPracticeIdOrderByCreatedAtDesc(practiceId);
     }
 
     @Override
-    public Comment addComment(Long practiceId, String text) {
-        Practice practice = practiceRepository.findById(practiceId)
-                .orElseThrow(() -> new RuntimeException("Practice not found"));
-
+    public Comment addCommentToPractice(Long practiceId, String text) {
+        // получаем текущего пользователя
         Author author = authorisation.getCurrentUser();
 
+        // находим практику по идентификатору
+        Practice practice = practiceRepository.findById(practiceId)
+                .orElseThrow(() -> new EntityNotFoundException("Practice not found"));
+
+        // создаем новый комментарий
         Comment comment = Comment.builder()
-                .text(text)
-                .practice(practice)
                 .author(author)
+                .practice(practice)
+                .text(text)
                 .createdAt(LocalDateTime.now())
                 .build();
 
+        // сохраняем комментарий в базе данных
         return commentRepository.save(comment);
     }
 }

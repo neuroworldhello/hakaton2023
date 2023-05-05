@@ -48,12 +48,12 @@ public class PracticeController {
 
     @GetMapping("/{id}/comments")
     public List<CommentDto> getCommentsByPracticeId(@PathVariable Long id) {
-        List<Comment> comments = commentService.getCommentsByPracticeId(id);
+        List<Comment> comments = commentService.getCommentsForPractice(id);
         return commentConverterService.convertToDtoList(comments);
     }
 
     @PostMapping("/{id}/comments")
     public Comment addComment(@PathVariable Long id, @RequestBody AddCommentRequest request) {
-        return commentService.addComment(id, request.getText());
+        return commentService.addCommentToPractice(id, request.getText());
     }
 }
