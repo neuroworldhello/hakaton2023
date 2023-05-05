@@ -18,9 +18,11 @@ import {
 import {PracticeDialog} from "./PracticeDialog";
 import Add from '@mui/icons-material/Add';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import TextsmsIcon from '@mui/icons-material/Textsms';
 import ButtonComponent from "./Button";
 import axios from "axios";
 import { categories, teams } from "./consts";
+import {CommentsDialog} from "./CommentsDialog";
 
 const TestData = [
   {
@@ -53,11 +55,12 @@ function BestPractices() {
   const [category, setCategory] = React.useState('all');
   const [team, setTeam] = React.useState('all');
   const [search, setSearch] = React.useState('');
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [practiceDialogOpen, setPracticeDialogOpen] = useState(false);
+  const [commentDialogOpen, setCommentDialogOpen] = useState(false);
   const [practices, setPractices] = React.useState([]);
 
-  const handleDialogOpen = () => {
-    setDialogOpen(true);
+  const handlePracticeDialogOpen = () => {
+    setPracticeDialogOpen(true);
   }
 
   const handleExit = () => {
@@ -101,7 +104,7 @@ function BestPractices() {
         variant="contained"
         className="ml-16 mt-16"
         startIcon={<Add />}
-        onClick={handleDialogOpen}
+        onClick={handlePracticeDialogOpen}
       >
         Добавить новую практику
       </ButtonComponent>
@@ -180,6 +183,7 @@ function BestPractices() {
                 <TableCell className="text-white">Количество голосов</TableCell>
                 <TableCell className="text-white">Автор</TableCell>
                 <TableCell className="text-white">Голосовать</TableCell>
+                <TableCell className="text-white">Комментарии</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -202,11 +206,21 @@ function BestPractices() {
                       <ThumbUpIcon />
                     </IconButton>
                   </TableCell>
+                  <TableCell>
+                    <IconButton
+                        aria-label="comment button"
+                        className="text-button"
+                        onClick={() => setCommentDialogOpen(true)}
+                    >
+                      <TextsmsIcon/>
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-      <PracticeDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen}/>
+      <PracticeDialog dialogOpen={practiceDialogOpen} setDialogOpen={setPracticeDialogOpen} />
+      <CommentsDialog dialogOpen={commentDialogOpen} setDialogOpen={setCommentDialogOpen} />
     </div>
   );
 }
