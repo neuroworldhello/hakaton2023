@@ -52,3 +52,4 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - /etc/letsencrypt:/etc/letsencrypt
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./error503.html:/var/www/html/error503.html
