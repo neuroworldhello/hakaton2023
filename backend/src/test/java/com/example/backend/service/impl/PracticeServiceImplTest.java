@@ -83,14 +83,14 @@ class PracticeServiceImplTest {
     @Test
     public void testSavePractice() {
         PracticeDto practice = createPractice();
-        PracticeDto savedPractice = practiceService.savePractice(practice);
+        PracticeDto savedPractice = practiceService.savePractice(practice, practice.getAuthor());
         assertNotNull(savedPractice.getId());
     }
 
     @Test
     public void testGetPracticeById() {
         PracticeDto practice = createPractice();
-        PracticeDto practiceDto = practiceService.savePractice(practice);
+        PracticeDto practiceDto = practiceService.savePractice(practice, practice.getAuthor());
         Practice retrievedPractice = practiceService.getPracticeById(practiceDto.getId());
         assertNotNull(retrievedPractice);
         assertEquals(practice.getName(), retrievedPractice.getName());
