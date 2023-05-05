@@ -14,4 +14,6 @@ public class PracticeSearchCriteria {
     private String category;
     private String team;
     private Sort.Direction sortByRatingDirection = Sort.Direction.DESC;
+    private int pageNumber = 0;
+    private int pageSize = 10;
 }
