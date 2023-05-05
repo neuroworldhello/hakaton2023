@@ -85,7 +85,7 @@ jobs:
         timeout-minutes: 10
         run: |
           cd backend
-          ./gradlew clean build test
+          ./gradlew clean build
 #        env:
 #          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/best
 #          SPRING_DATASOURCE_USERNAME: postgres
