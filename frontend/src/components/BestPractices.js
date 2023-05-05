@@ -24,33 +24,6 @@ import axios from "axios";
 import { categories, teams } from "./consts";
 import {CommentsDialog} from "./CommentsDialog";
 
-const TestData = [
-  {
-    id: 1,
-    name: 'Практика 1',
-    category: 'Категория 1',
-    team: 'Команда 1',
-    votes: 10,
-    author: 'Автор 1',
-  },
-  {
-    id: 2,
-    name: 'Практика 2',
-    category: 'Категория 2',
-    team: 'Команда 2',
-    votes: 8,
-    author: 'Автор 2',
-  },
-  {
-    id: 3,
-    name: 'Практика 3',
-    category: 'Категория 1',
-    team: 'Команда 3',
-    votes: 5,
-    author: 'Автор 3',
-  },
-];
-
 function BestPractices() {
   const [category, setCategory] = React.useState('all');
   const [team, setTeam] = React.useState('all');
@@ -64,11 +37,12 @@ function BestPractices() {
   }
 
   const handleExit = () => {
-      return axios.get(document.location + '/logout');
+      return axios.get('/logout');
   }
 
   const handleLike = (id) => {
-    axios.post(`/api/practices/${id}/rate`, id);
+    axios.post(`/api/practices/${id}/rate`, id)
+      .then(handleSearch);
   }
 
   const handleSearch = () => {
@@ -77,13 +51,13 @@ function BestPractices() {
       team: team === 'all' ? null : team,
       category: category === 'all' ? null : team
     };
-    axios.post('/api/practices/search', condition);
+    axios.post('/api/practices/search', condition)
+      .then(resp => setPractices(resp.data));
   }
 
   useEffect(() => {
-    // axios.get(``)
-    //   .then((response) => setPractices(response.data));
-    setPractices(TestData);
+    axios.post('/api/practices/search', {})
+      .then(resp => setPractices(resp.data));
   },[]);
 
   return (
@@ -190,18 +164,18 @@ function BestPractices() {
               {practices.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell>
-                    <a href={item.link} target="_blank" rel="noreferrer" className="text-black">
+                    <a href={item.documentLink} target="_blank" rel="noreferrer" className="text-black">
                       {item.name}
                     </a>
                   </TableCell>
                   <TableCell>{item.category}</TableCell>
                   <TableCell>{item.team}</TableCell>
-                  <TableCell>{item.votes}</TableCell>
+                  <TableCell>{item.rating}</TableCell>
                   <TableCell>{item.author}</TableCell>
                   <TableCell>
                     <IconButton aria-label="upload picture"
                                 className="text-button"
-                                disabled={false}
+                                disabled={item.disable || false}
                                 onClick={() => handleLike(item.id)}>
                       <ThumbUpIcon />
                     </IconButton>
@@ -219,7 +193,7 @@ function BestPractices() {
               ))}
             </TableBody>
           </Table>
-      <PracticeDialog dialogOpen={practiceDialogOpen} setDialogOpen={setPracticeDialogOpen} />
+      <PracticeDialog dialogOpen={practiceDialogOpen} setDialogOpen={setPracticeDialogOpen} handleSearch={handleSearch} />
       <CommentsDialog dialogOpen={commentDialogOpen} setDialogOpen={setCommentDialogOpen} />
     </div>
   );

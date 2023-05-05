@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.service.Authorisation;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,6 +24,9 @@ public class LoginController {
     @Autowired
     AuthenticationManager authManager;
 
+    @Autowired
+    Authorisation authorisation;
+
     @GetMapping("/login")
     public void login(HttpServletRequest req, HttpServletResponse resp, String username) throws IOException {
         UsernamePasswordAuthenticationToken authReq
@@ -41,5 +45,10 @@ public class LoginController {
     public void logout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.addCookie(new Cookie("JSESSIONID",""));
         resp.sendRedirect("/");
+    }
+
+    @GetMapping("/username")
+    public String username() throws IOException {
+        return authorisation.getUserName();
     }
 }
