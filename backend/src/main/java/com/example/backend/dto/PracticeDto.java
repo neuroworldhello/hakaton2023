@@ -14,4 +14,5 @@ public class PracticeDto {
     private String team;
     private String category;
     private String author;
+    private Boolean isAlreadyVoted;
 }
