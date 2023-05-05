@@ -1,5 +1,8 @@
 package com.example.backend.controller;
 
+import com.example.backend.domain.Author;
+import com.example.backend.repository.AuthorRepository;
+import com.example.backend.service.Authorisation;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,6 +26,12 @@ public class LoginController {
     @Autowired
     AuthenticationManager authManager;
 
+    @Autowired
+    Authorisation authorisation;
+
+    @Autowired
+    AuthorRepository authorRepository;
+
     @GetMapping("/login")
     public void login(HttpServletRequest req, HttpServletResponse resp, String username) throws IOException {
         UsernamePasswordAuthenticationToken authReq
@@ -34,6 +43,13 @@ public class LoginController {
         HttpSession session = req.getSession(true);
         session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
 
+        Author author = authorRepository.findByName(authorisation.getUserName()).orElse(null);
+        if (author == null){
+            authorRepository.save(Author.builder()
+                    .name(authorisation.getUserName())
+                    .build());
+        }
+
         resp.sendRedirect("/");
     }
 
@@ -41,5 +57,10 @@ public class LoginController {
     public void logout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.addCookie(new Cookie("JSESSIONID",""));
         resp.sendRedirect("/");
+    }
+
+    @GetMapping("/username")
+    public String username() throws IOException {
+        return authorisation.getUserName();
     }
 }
