@@ -28,15 +28,15 @@ public class Practice {
 
     private int rating;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "author_id")
     private Author author;
 

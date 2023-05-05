@@ -28,11 +28,11 @@ services:
     depends_on:
       - db
 
-  frontend:
-    restart: always
-    image: ${DOCKERHUB_REPOSITORY}/frontend:latest
-    ports:
-      - "3000:3000"
+#  frontend:
+#    restart: always
+#    image: ${DOCKERHUB_REPOSITORY}/frontend:latest
+#    ports:
+#      - "3000:3000"
 
   nginx:
     restart: always
@@ -41,7 +41,7 @@ services:
       - "80:80"
       - "443:443"
     depends_on:
-      - frontend
+      - backend
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
       - ./nginx.conf:/etc/nginx/conf.d/default.conf

@@ -187,7 +187,7 @@ function BestPractices() {
             <TableCell className="text-white flex items-center">
               Количество голосов
               <IconButton onClick={handleSort} disabled={loading}>
-                <SortIcon className={sortRating === 'ASC' && "revert-180"} />
+                <SortIcon className={` text-button-text ${sortRating === 'ASC' && "revert-180"}`} />
               </IconButton>
             </TableCell>
             <TableCell className="text-white">Автор</TableCell>
