@@ -56,7 +56,7 @@ public class LoginController {
     @GetMapping("/logout")
     public void logout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.addCookie(new Cookie("JSESSIONID",""));
-        resp.sendRedirect("/");
+        resp.sendRedirect("/login.html");
     }
 
     @GetMapping("/username")
