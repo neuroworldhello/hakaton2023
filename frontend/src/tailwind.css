@@ -226,6 +226,14 @@ body :is(.items-center) {
   align-items: center
 }
 
+body :is(.justify-end) {
+  justify-content: flex-end
+}
+
+body :is(.justify-center) {
+  justify-content: center
+}
+
 body :is(.rounded) {
   border-radius: 0.25rem
 }
