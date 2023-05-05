@@ -183,7 +183,7 @@ function BestPractices() {
             <TableCell className="text-white">Наилучшие практики</TableCell>
             <TableCell className="text-white">Категория</TableCell>
             <TableCell className="text-white">Команда</TableCell>
-            <TableCell className="text-white flex">
+            <TableCell className="text-white flex items-center">
               Количество голосов
               <IconButton onClick={handleSort} disabled={loading}>
                 <SortIcon className={sortRating === 'ASC' && "revert-180"} />
