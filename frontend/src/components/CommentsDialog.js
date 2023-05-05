@@ -1,5 +1,5 @@
 import React from "react";
-import {Dialog, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {Dialog, DialogContent, DialogContentText, DialogTitle, TextField} from "@mui/material";
 
 export function CommentsDialog({dialogOpen, setDialogOpen}) {
     const handleDialogClose = () => {
@@ -14,9 +14,16 @@ export function CommentsDialog({dialogOpen, setDialogOpen}) {
             fullWidth={true}
         >
             <DialogTitle>Комментарии</DialogTitle>
-            <DialogContent className='pb-0'>
-                <DialogContentText>
-                    тут контент
+            <DialogContent className='pb-10'>
+                <DialogContentText className='pt-6'>
+                    <TextField
+                        id="outlined-multiline-static"
+                        label="Ваш комментарий"
+                        multiline
+                        rows={4}
+                        defaultValue=''
+                        className="w-full"
+                    />
                 </DialogContentText>
             </DialogContent>
 
