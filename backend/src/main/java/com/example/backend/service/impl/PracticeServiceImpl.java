@@ -2,9 +2,11 @@ package com.example.backend.service.impl;
 
 import com.example.backend.converter.PracticeConverterService;
 import com.example.backend.domain.Practice;
+import com.example.backend.domain.Vote;
 import com.example.backend.dto.PracticeDto;
 import com.example.backend.dto.PracticeSearchCriteria;
 import com.example.backend.repository.PracticeRepository;
+import com.example.backend.repository.VoteRepository;
 import com.example.backend.service.PracticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -23,6 +25,7 @@ import static com.example.backend.repository.criteria.PracticeSpecification.*;
 public class PracticeServiceImpl implements PracticeService {
     private final PracticeRepository practiceRepository;
     private final PracticeConverterService practiceConverterService;
+    private final VoteRepository voteRepository;
 
     public PracticeDto savePractice(PracticeDto practiceDto, String author) {
         practiceDto.setAuthor(author);
@@ -71,7 +74,10 @@ public class PracticeServiceImpl implements PracticeService {
                         new NoSuchElementException("Practice not found with id: " + id));
 
         practice.setRating(practice.getRating() + 1);
-
+        voteRepository.save(Vote.builder()
+                        .practiceId(practice.getId())
+                        .authorId(practice.getAuthor().getId())
+                .build());
         return practiceRepository.save(practice);
     }
 }

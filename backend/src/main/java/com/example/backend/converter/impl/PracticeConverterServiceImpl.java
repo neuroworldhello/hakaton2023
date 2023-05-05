@@ -9,6 +9,7 @@ import com.example.backend.dto.PracticeDto;
 import com.example.backend.repository.AuthorRepository;
 import com.example.backend.repository.CategoryRepository;
 import com.example.backend.repository.TeamRepository;
+import com.example.backend.repository.VoteRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class PracticeConverterServiceImpl implements PracticeConverterService {
     private final AuthorRepository authorRepository;
     private final CategoryRepository categoryRepository;
     private final TeamRepository teamRepository;
+    private final VoteRepository voteRepository;
+
 
     @Override
     public Practice toEntity(PracticeDto practiceDto) {
@@ -55,6 +58,7 @@ public class PracticeConverterServiceImpl implements PracticeConverterService {
                 .author(practice.getAuthor().getName())
                 .team(practice.getTeam().getName())
                 .category(practice.getCategory().getName())
+                .isAlreadyVoted(voteRepository.existsByAuthorIdAndPracticeId(practice.getAuthor().getId(), practice.getId()))
                 .build();
     }
 }
