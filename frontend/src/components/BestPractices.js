@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   AppBar,
   Grid,
@@ -37,30 +37,25 @@ function BestPractices() {
   const [user, setUser] = React.useState('');
   const [practiceId, setPracticeId] = useState();
 
-  const handlePracticeDialogOpen = () => {
+  const handlePracticeDialogOpen = useCallback(() => {
     setPracticeDialogOpen(true);
-  }
+  }, []);
 
-  const handleExit = () => {
+  const handleExit = useCallback(() => {
     return axios.get('/logout')
-                .then(window.location.href = '/login.html');
-  }
+      .then(window.location.href = '/login.html');
+  }, []);
 
-  const handleSort = () => {
+  const handleSort = useCallback(() => {
     setSortRating(prev => prev === 'DESC' ? 'ASC' : 'DESC');
-  }
+  }, []);
 
-  const handleLike = (id) => {
-    axios.post(`/api/practices/${id}/rate`, id)
-      .then(handleSearch);
-  }
-
-  const handleOpenCommentDialog = (practiceId) => {
+  const handleOpenCommentDialog = useCallback((practiceId) => {
     setPracticeId(practiceId);
     setCommentDialogOpen(true);
-  }
+  }, []);
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     setLoading(true);
     const condition = {
       name: search,
@@ -71,7 +66,7 @@ function BestPractices() {
     axios.post('/api/practices/search', condition)
       .then(resp => setPractices(resp.data))
       .then(() => setLoading(false));
-  }
+  }, [search, team, category, sortRating]);
 
   useEffect(() => {
     axios.post('/api/practices/search', {})
@@ -81,15 +76,20 @@ function BestPractices() {
       .then(resp => setUser(resp.data));
   }, []);
 
+  const handleLike = useCallback((id) => {
+    axios.post(`/api/practices/${id}/rate`, id)
+      .then(handleSearch);
+  }, [handleSearch]);
+
   useEffect(() => {
     handleSearch();
   }, [sortRating]);
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = useCallback((event) => {
     if (event.key === 'Enter') {
       handleSearch();
     }
-  }
+  }, [handleSearch]);
 
   return (
     <div className="bg-background-page ">
