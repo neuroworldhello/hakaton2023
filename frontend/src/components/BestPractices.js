@@ -13,7 +13,7 @@ import {
   FormControl, InputLabel, IconButton,
   TextField,
   Toolbar,
-  Typography,
+  Typography, Tooltip,
 } from '@mui/material';
 import { PracticeDialog } from "./PracticeDialog";
 import Add from '@mui/icons-material/Add';
@@ -187,18 +187,20 @@ function BestPractices() {
       <Table className="bg-background-table mt-16">
         <TableHead className="bg-table-header text-white">
           <TableRow>
-            <TableCell className="text-white">Наилучшие практики</TableCell>
-            <TableCell className="text-white">Категория</TableCell>
-            <TableCell className="text-white">Команда</TableCell>
-            <TableCell className="text-white flex items-center">
-              Количество голосов
-              <IconButton onClick={handleSort} disabled={loading}>
-                <SortIcon className={` text-button-text ${sortRating === 'ASC' && "revert-180"}`} />
-              </IconButton>
+            <TableCell className="text-white" width='50%'>Наилучшие практики</TableCell>
+            <TableCell className="text-white " width='9%'>Категория</TableCell>
+            <TableCell className="text-white " width='9%'>Команда</TableCell>
+            <TableCell width='9%'>
+              <div className="text-white flex items-center">
+                Количество голосов
+                <IconButton onClick={handleSort} disabled={loading}>
+                  <SortIcon className={` text-button-text ${sortRating === 'ASC' && "revert-180"}`} />
+                </IconButton>
+              </div>
             </TableCell>
-            <TableCell className="text-white">Автор</TableCell>
-            <TableCell className="text-white">Голосовать</TableCell>
-            <TableCell className="text-white">Комментарии</TableCell>
+            <TableCell className="text-white " width='9%'>Автор</TableCell>
+            <TableCell className="text-white " width='7%'>Голосовать</TableCell>
+            <TableCell className="text-white " width='7%'>Комментарии</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -214,12 +216,16 @@ function BestPractices() {
               <TableCell>{item.rating}</TableCell>
               <TableCell>{item.author}</TableCell>
               <TableCell>
-                <IconButton aria-label="upload picture"
-                            className="text-button disabled:text-body-font"
-                            disabled={item.isAlreadyVoted}
-                            onClick={() => handleLike(item.id)}>
-                  <ThumbUpIcon />
-                </IconButton>
+                <Tooltip title={item.isAlreadyVoted && 'Вы уже проголосовали за эту практику'}>
+                  <span>
+                    <IconButton aria-label="upload picture"
+                                className="text-button disabled:text-body-font"
+                                disabled={item.isAlreadyVoted}
+                                onClick={() => handleLike(item.id)}>
+                      <ThumbUpIcon />
+                    </IconButton>
+                  </span>
+                </Tooltip>
               </TableCell>
               <TableCell>
                 <IconButton
