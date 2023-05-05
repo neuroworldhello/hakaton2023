@@ -28,6 +28,7 @@ function BestPractices() {
   const [search, setSearch] = React.useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [practices, setPractices] = React.useState([]);
+  const [user, setUser] = React.useState('');
 
   const handleDialogOpen = () => {
     setDialogOpen(true);
@@ -55,6 +56,8 @@ function BestPractices() {
   useEffect(() => {
     axios.post('/api/practices/search', {})
       .then(resp => setPractices(resp.data));
+    axios.get('/username')
+      .then( resp => setUser(resp.data));
   },[]);
 
   return (
@@ -64,11 +67,14 @@ function BestPractices() {
           <Typography variant="h6" className="text-white" component="div" sx={{ flexGrow: 1 }}>
             Наилучшие практики
           </Typography>
+          <Typography variant="h6" className="text-white mr-16" component="div">
+            Пользователь: {user}
+          </Typography>
           <ButtonComponent onClick={handleExit}>Выйти</ButtonComponent>
         </Toolbar>
       </AppBar>
       <div>
-        <img src={require('../logo.jpg')} alt="logo" height="150" className="ml-16 mt-16" />
+        <img src={require('../logo.jpg')} alt="logo" height="120" className="ml-16 mt-16" />
       </div>
       {/* Кнопка добавления новой практики */}
       <ButtonComponent
@@ -170,8 +176,8 @@ function BestPractices() {
                   <TableCell>{item.author}</TableCell>
                   <TableCell>
                     <IconButton aria-label="upload picture"
-                                className="text-button"
-                                disabled={item.disable || false}
+                                className="text-button disabled:text-body-font"
+                                disabled={item.isAlreadyVoted}
                                 onClick={() => handleLike(item.id)}>
                       <ThumbUpIcon />
                     </IconButton>
