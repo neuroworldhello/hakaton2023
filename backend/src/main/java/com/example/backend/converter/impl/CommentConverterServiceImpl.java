@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ public class CommentConverterServiceImpl implements CommentConverterService {
     public CommentDto convertToDto(Comment comment) {
         CommentDto commentDto = modelMapper.map(comment, CommentDto.class);
         commentDto.setAuthor(comment.getAuthor().getName());
+        commentDto.setCreatedAt(comment.getCreatedAt().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
         return commentDto;
     }
 
