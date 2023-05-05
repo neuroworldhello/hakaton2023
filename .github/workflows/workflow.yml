@@ -184,7 +184,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no ubuntu@${VM_HOST_IP} << EOF
             sudo docker-compose stop backend
             sudo docker-compose rm -f backend
-            sudo docker rmi ${{ env.DOCKERHUB_REPOSITORY }}/backend:${{ env.IMAGE_TAG }}
+            sudo docker rmi ${{ env.DOCKERHUB_REPOSITORY }}/backend:latest
           EOF
 
       - name: Restart backend
