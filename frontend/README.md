@@ -71,4 +71,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 
 Сгенерировать стили
-npx tailwindcss -i ./src/index.css -o ./src/dist/output.css --watch
+npx tailwindcss -o src/tailwind.css --watch

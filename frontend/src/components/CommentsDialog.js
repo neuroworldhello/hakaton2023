@@ -1,17 +1,35 @@
-import React, {useState} from "react";
-import {Dialog, DialogContent, DialogContentText, DialogTitle, TextField} from "@mui/material";
+import React, {useEffect, useState} from "react";
+import {Dialog, DialogContent, DialogContentText, DialogTitle, TableCell, TextField, Typography} from "@mui/material";
 import Button from "./Button";
+import axios from "axios";
+import {toast} from "react-toastify";
+import {toastOptions} from "./consts";
 
-export function CommentsDialog({dialogOpen, setDialogOpen}) {
+export function CommentsDialog({dialogOpen, setDialogOpen, practiceId}) {
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState([]);
+
+    useEffect(() => {
+        if (dialogOpen && practiceId) {
+            axios.get(`/api/practices/${practiceId}/comments`)
+                .then(response => {
+                    console.log(response.data)
+                    setComments(response.data);
+                })
+
+                .catch(() => toast.error('Ошибка получения комментариев', toastOptions))
+        }
+    }, [practiceId, dialogOpen])
 
     const handleDialogClose = () => {
         setDialogOpen(false);
     }
 
     const handleSaveButtonClick = () => {
-        console.log('click!')
+        axios.post(`/api/practices/${practiceId}/comments?text=${comment}`)
+            .then(() => toast('Комментарий добавлен', toastOptions))
+            .catch(() => toast.error('Ошибка добавления комментария', toastOptions))
+
         setDialogOpen(false);
         setComment('');
     }
@@ -40,21 +58,30 @@ export function CommentsDialog({dialogOpen, setDialogOpen}) {
                         className="w-full"
                     />
                     <div className='py-10 flex justify-end'>
-                            <Button
-                                onClick={handleSaveButtonClick}
-                                disabled={!comment}
-                            >
-                                Добавить
-                            </Button>
+                        <Button
+                            onClick={handleSaveButtonClick}
+                            disabled={!comment}
+                        >
+                            Добавить
+                        </Button>
                     </div>
                     <div>
                         {comments.length > 0 &&
-                            <div>комментарии</div>
+                        <div>
+                            {comments.map(comment =>
+                                <div id={comment.id} className='py-10'>
+                                    <div className='flex flex-row items-center'>
+                                        <Typography variant="h6" className='pr-6'>{comment.author}</Typography>
+                                        <Typography variant='body2' className='pt-1'>{comment.createdAt}</Typography>
+                                    </div>
+                                    <Typography>{comment.text}</Typography>
+                                </div>)}
+                        </div>
                         }
                         {comments.length === 0 &&
-                        <div className='flex justify-center'>
+                        <Typography className='flex justify-center'>
                             Список комментариев к этой практике пуст. Будьте первым!
-                        </div>
+                        </Typography>
                         }
                     </div>
                 </DialogContentText>
