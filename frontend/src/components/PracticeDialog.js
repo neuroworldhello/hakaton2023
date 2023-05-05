@@ -6,7 +6,7 @@ import {toast} from "react-toastify";
 import Button from "./Button";
 import axios from "axios";
 
-export function PracticeDialog({dialogOpen, setDialogOpen}) {
+export function PracticeDialog({dialogOpen, setDialogOpen, handleSearch}) {
     const [practice, setPractice] = useState({});
 
     const handleDialogClose = () => {
@@ -18,6 +18,7 @@ export function PracticeDialog({dialogOpen, setDialogOpen}) {
 
         axios.post("/api/practices", practice)
             .then(() => toast('Практика ' + practice.name + ' сохранена', toastOptions))
+            .then(handleSearch)
             .catch(() => toast.error('Ошибка сохранения практики', toastOptions));
         setPractice({})
     }
